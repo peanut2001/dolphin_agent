@@ -1,0 +1,33 @@
+# Environment variables
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model files (large)
+*.pth
+*.pth.tar
+*.onnx
+
+# Data
+data/qdrant_db/
+data/docs_db/
+data/parsed_docs/
+uploads/

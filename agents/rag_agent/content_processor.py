@@ -4,7 +4,7 @@ from typing import List, Dict, Any, Optional, Tuple
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_openai import AzureOpenAIEmbeddings, AzureChatOpenAI
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 class ContentProcessor:
     """
@@ -132,7 +132,7 @@ class ContentProcessor:
         
         Args:
             formatted_document: Formatted document text
-            model: AzureChatOpenAI model instance (will create one if not provided)
+            model: ChatOpenAI model instance (will create one if not provided)
             
         Returns:
             List of document chunks

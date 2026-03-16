@@ -1,10 +1,10 @@
 <!-- templates/index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Assistant</title>
+    <title>海豚医疗智能助手</title>
     <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/chromatography.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -221,55 +221,55 @@
                 <div class="sidebar">
                     <h5>
                         <i class="fas fa-robot me-2"></i>
-                        Medical Assistant
+                        海豚医疗助手
                     </h5>
                     <div class="agent-info">
-                        <h6>Available Agents</h6>
+                        <h6>可用智能体</h6>
                         <ul class="list-unstyled">
-                            <li><i class="fas fa-comment-medical me-2"></i> Medical Conversation Agent</li>
-                            <li><i class="fas fa-database me-2"></i> Medical RAG Agent</li>
-                            <li><i class="fas fa-search me-2"></i> Web Search Agent</li>
+                            <li><i class="fas fa-comment-medical me-2"></i> 医疗对话智能体</li>
+                            <li><i class="fas fa-database me-2"></i> 医疗知识检索智能体</li>
+                            <li><i class="fas fa-search me-2"></i> 网络搜索智能体</li>
                         </ul>
                     </div>
                     <div class="agent-info">
-                        <h6>Computer Vision Agents</h6>
+                        <h6>计算机视觉智能体</h6>
                         <ul class="list-unstyled">
-                            <li><i class="fas fa-brain me-2"></i> Brain Tumor Detection</li>
-                            <li><i class="fas fa-lungs me-2"></i> Chest X-ray Covid-19 Classification</li>
-                            <li><i class="fas fa-allergies me-2"></i> Skin Lesion Segmentation</li>
+                            <li><i class="fas fa-brain me-2"></i> 脑肿瘤检测</li>
+                            <li><i class="fas fa-lungs me-2"></i> 胸部X光新冠分类</li>
+                            <li><i class="fas fa-allergies me-2"></i> 皮肤病变分割</li>
                         </ul>
                     </div>
                     <div class="agent-info">
-                        <h6>Agent Capabilities</h6>
+                        <h6>智能体能力</h6>
                         <ul class="list-unstyled">
-                            <li><strong>Medical RAG Agent:</strong>
+                            <li><strong>医疗知识检索智能体：</strong>
                                 <ul>
-                                    <li>Docling based parsing to extract text, tables, and images from PDFs</li>
-                                    <li>Embedding markdown formatted text, tables and LLM based image summaries</li>
-                                    <li>LLM based semantic chunking with structural boundaries</li>
-                                    <li>LLM based query expansion with related medical terms</li>
-                                    <li>Qdrant Vector DB hybrid search</li>
-                                    <li>Input-output guardrails for safe responses</li>
-                                    <li>Confidence-based handoff to Web Search to prevent hallucinations</li>
+                                    <li>基于 Docling 解析 PDF 中的文本、表格和图像</li>
+                                    <li>嵌入 Markdown 格式文本、表格和 LLM 图像摘要</li>
+                                    <li>基于 LLM 的语义分块与结构边界识别</li>
+                                    <li>基于 LLM 的查询扩展与医学术语关联</li>
+                                    <li>Qdrant 向量数据库混合搜索</li>
+                                    <li>输入输出安全护栏</li>
+                                    <li>基于置信度的网络搜索切换，防止幻觉</li>
                                 </ul>
                             </li>
-                            <li><strong>Human-in-the-loop Verification:</strong>
+                            <li><strong>人机协同验证：</strong>
                                 <ul>
-                                    <li>Human verification for CV agents</li>
+                                    <li>对视觉智能体结果进行人工审核</li>
                                 </ul>
                             </li>
                         </ul>
                     </div>
                     <div class="agent-info">
-                        <h6>Multi-Agent Orchestration</h6>
+                        <h6>多智能体协作</h6>
                         <ul class="list-unstyled">
-                            <li><i class="fas fa-project-diagram me-2"></i> Coordinated interaction between agents</li>
-                            <li><i class="fas fa-tasks me-2"></i> Dynamic task allocation based on capabilities</li>
-                            <li><i class="fas fa-sync-alt me-2"></i> Seamless integration of agent responses</li>
+                            <li><i class="fas fa-project-diagram me-2"></i> 智能体间协调交互</li>
+                            <li><i class="fas fa-tasks me-2"></i> 基于能力的动态任务分配</li>
+                            <li><i class="fas fa-sync-alt me-2"></i> 无缝集成智能体响应</li>
                         </ul>
                     </div>
                     <button id="clear-chat" class="btn btn-outline-danger w-100 mt-3">
-                        <i class="fas fa-trash me-2"></i> Clear Conversation
+                        <i class="fas fa-trash me-2"></i> 清空对话
                     </button>
                 </div>
             </div>
@@ -280,15 +280,15 @@
                     <div class="chat-header">
                         <h5 class="mb-0">
                             <i class="fas fa-stethoscope me-2"></i>
-                            Multi-Agent Medical Assistant
+                            多智能体医疗助手
                         </h5>
-                        <small class="text-muted">Upload medical images or ask health-related questions</small>
+                        <small class="text-muted">上传医学图像或提出健康相关问题</small>
                     </div>
                     
                     <div id="chat-body" class="chat-body">
                         <div class="message assistant-message">
-                            <div class="agent-tag">System</div>
-                            <p>Hello! I'm your medical assistant. You can ask me health-related questions or upload medical images for analysis.</p>
+                            <div class="agent-tag">系统</div>
+                            <p>你好！我是你的医疗智能助手。你可以向我提出健康相关的问题，或上传医学图像进行分析。</p>
                         </div>
                     </div>
                     
@@ -310,7 +310,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <textarea id="message-input" class="form-control message-input" rows="1" placeholder="Ask a medical question..."></textarea>
+                                <textarea id="message-input" class="form-control message-input" rows="1" placeholder="请输入医疗相关问题..."></textarea>
                             </div>
                             
                             <button type="submit" class="btn btn-primary rounded-circle ms-2" style="width: 40px; height: 40px;">
@@ -326,6 +326,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
     <script>
+        // API base URL - change this to match your backend server address
+        const API_BASE = 'http://localhost:8000';
 
         // let mediaRecorder;
         // let audioChunks = [];
@@ -619,7 +621,7 @@
         //                     currentAudio.play();
         //                 } catch (error) {
         //                     console.error("TTS Error:", error);
-        //                     this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Voice failed';
+        //                     this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 语音失败';
         //                     this.disabled = false;
         //                 }
         //             });
@@ -904,7 +906,7 @@
         //                     currentAudio.play();
         //                 } catch (error) {
         //                     console.error("TTS Error:", error);
-        //                     this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Voice failed';
+        //                     this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 语音失败';
         //                     this.disabled = false;
         //                 }
 
@@ -1026,16 +1028,14 @@
                 displayMessages = [];
                 chatBody.innerHTML = `
                     <div class="message assistant-message">
-                        <div class="agent-tag">System</div>
-                        <p>Hello! I'm your medical assistant. You can ask me health-related questions or upload medical images for analysis.</p>
+                        <div class="agent-tag">系统</div>
+                        <p>你好！我是你的医疗智能助手。你可以向我提出健康相关的问题，或上传医学图像进行分析。</p>
                     </div>
                 `;
             });
             
             // Handle form submission
-            chatForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
+            async function handleFormSubmit() {
                 // Get message from input or transcribed text
                 const message = messageInput.value.trim();
                 if (!message && !imageUpload.files.length) return;
@@ -1055,7 +1055,7 @@
                 if (imageDataUrl) {
                     messageContent += `
                         <div class="mt-2">
-                            <img src="${imageDataUrl}" alt="Uploaded image" class="img-fluid rounded" style="max-height: 200px;">
+                            <img src="${imageDataUrl}" alt="上传的图像" class="img-fluid rounded" style="max-height: 200px;">
                         </div>
                     `;
                 }
@@ -1091,14 +1091,14 @@
                         formData.append('image', imageUpload.files[0]);
                         
                         // Send to backend using the /upload endpoint
-                        response = await fetch('/upload', {
+                        response = await fetch(`${API_BASE}/upload`, {
                             method: 'POST',
                             body: formData,
                             credentials: 'include' // Important for cookie handling
                         });
                     } else {
                         // Text-only query using the /chat endpoint with JSON
-                        response = await fetch('/chat', {
+                        response = await fetch(`${API_BASE}/chat`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -1129,7 +1129,7 @@
                         <div>${marked.parse(data.response)}</div>
                         <div class="audio-controls mt-2">
                             <button class="btn btn-sm btn-outline-primary play-tts-btn">
-                                <i class="fas fa-play"></i> Play Voice Response
+                                <i class="fas fa-play"></i> 播放语音回复
                             </button>
                         </div>
                     `;
@@ -1138,10 +1138,10 @@
                     if (data.agent.includes("HUMAN_VALIDATION")) {
                         assistantHtml += `
                             <div class="mt-3 p-3 border rounded bg-light">
-                                <p><strong>⚠️ Human Validation Required:</strong> Do you agree with this result?</p>
-                                <button class="btn btn-success btn-sm validate-btn" data-validation="yes">✔ Yes</button>
-                                <button class="btn btn-danger btn-sm validate-btn" data-validation="no">✖ No</button>
-                                <textarea class="form-control mt-2 validation-comments" rows="2" placeholder="Add comments (optional)"></textarea>
+                                <p><strong>⚠️ 需要人工验证：</strong> 您是否同意该诊断结果？</p>
+                                <button class="btn btn-success btn-sm validate-btn" data-validation="yes">✔ 同意</button>
+                                <button class="btn btn-danger btn-sm validate-btn" data-validation="no">✖ 不同意</button>
+                                <textarea class="form-control mt-2 validation-comments" rows="2" placeholder="添加备注（可选）"></textarea>
                             </div>
                         `;
                     }
@@ -1154,12 +1154,12 @@
                             assistantHtml += `
                                 <div class="image-side-by-side">
                                     <div class="image-container">
-                                        <img src="${imageDataUrl}" alt="Original image" class="img-fluid rounded">
-                                        <div class="image-caption">Original Image</div>
+                                        <img src="${imageDataUrl}" alt="原始图像" class="img-fluid rounded">
+                                        <div class="image-caption">原始图像</div>
                                     </div>
                                     <div class="image-container">
-                                        <img src="${data.result_image}" alt="Segmented image" class="img-fluid rounded">
-                                        <div class="image-caption">Segmentation Result</div>
+                                        <img src="${data.result_image}" alt="分割结果" class="img-fluid rounded">
+                                        <div class="image-caption">分割结果</div>
                                     </div>
                                 </div>
                             `;
@@ -1167,7 +1167,7 @@
                             // Otherwise just show the result image
                             assistantHtml += `
                                 <div class="mt-3">
-                                    <img src="${data.result_image}" alt="Result image" class="result-image">
+                                    <img src="${data.result_image}" alt="结果图像" class="result-image">
                                 </div>
                             `;
                         }
@@ -1197,7 +1197,7 @@
 
                         // Disable the button while generating speech
                         this.disabled = true;
-                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...';
 
                         try {
                             // Get the new audio URL
@@ -1216,20 +1216,20 @@
 
                             // Set event listeners for button updates
                             currentAudio.onplay = () => {
-                                this.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                                this.innerHTML = '<i class="fas fa-pause"></i> 暂停';
                                 this.classList.remove('btn-outline-primary');
                                 this.classList.add('btn-primary');
                                 this.disabled = false;
                             };
 
                             currentAudio.onpause = () => {
-                                this.innerHTML = '<i class="fas fa-play"></i> Play';
+                                this.innerHTML = '<i class="fas fa-play"></i> 播放';
                                 this.classList.remove('btn-primary');
                                 this.classList.add('btn-outline-primary');
                             };
 
                             currentAudio.onended = () => {
-                                this.innerHTML = '<i class="fas fa-play"></i> Play Again';
+                                this.innerHTML = '<i class="fas fa-play"></i> 重新播放';
                                 this.classList.remove('btn-primary');
                                 this.classList.add('btn-outline-primary');
                                 URL.revokeObjectURL(audioUrl);  // Free memory after playback
@@ -1249,7 +1249,7 @@
                             currentAudio.play();
                         } catch (error) {
                             console.error("TTS Error:", error);
-                            this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Voice failed';
+                            this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 语音失败';
                             this.disabled = false;
                         }
                     });
@@ -1281,21 +1281,26 @@
                     const errorElement = document.createElement('div');
                     errorElement.className = 'message assistant-message';
                     errorElement.innerHTML = `
-                        <div class="agent-tag">System</div>
-                        <p class="text-danger">Sorry, there was an error processing your request. Please try again.</p>
+                        <div class="agent-tag">系统</div>
+                        <p class="text-danger">抱歉，处理您的请求时出错，请重试。</p>
                     `;
                     chatBody.appendChild(errorElement);
                 }
                 
                 // Scroll to bottom again
                 chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            chatForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleFormSubmit();
             });
 
             // Allow sending message with Enter key
             messageInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
-                    chatForm.dispatchEvent(new Event('submit'));
+                    handleFormSubmit();
                 }
             });
         });
@@ -1336,7 +1341,7 @@
                     })
                     .catch(error => {
                         console.error('Error accessing microphone:', error);
-                        alert('Could not access microphone. Please check your browser permissions.');
+                        alert('无法访问麦克风，请检查浏览器权限设置。');
                     });
             } else {
                 // Stop recording
@@ -1359,14 +1364,14 @@
             // Create a temporary element to display processing status
             const statusElement = document.createElement('div');
             statusElement.className = 'alert alert-info mt-2';
-            statusElement.innerHTML = 'Processing voice input...';
+            statusElement.innerHTML = '正在处理语音输入...';
             document.querySelector('.chat-footer').prepend(statusElement);
             
             // Use server-side transcription for recorded audio
             const formData = new FormData();
             formData.append('audio', audioBlob);
             
-            fetch('/transcribe', {
+            fetch(`${API_BASE}/transcribe`, {
                 method: 'POST',
                 body: formData
             })
@@ -1382,7 +1387,7 @@
             .catch(error => {
                 console.error('Transcription error:', error);
                 statusElement.className = 'alert alert-danger mt-2';
-                statusElement.innerHTML = 'Failed to transcribe speech. Please try again or type your message.';
+                statusElement.innerHTML = '语音转写失败，请重试或直接输入文字。';
             })
             .finally(() => {
                 // Clean up
@@ -1397,7 +1402,7 @@
         // Function to generate speech using the backend
         async function generateSpeech(text) {
             try {
-                const response = await fetch('/generate-speech', {
+                const response = await fetch(`${API_BASE}/generate-speech`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1427,14 +1432,14 @@
                 // Create and display a waiting element
                 const waitingEl = document.createElement('div');
                 waitingEl.className = 'alert alert-info mt-2';
-                waitingEl.innerHTML = '⏳ Processing validation...';
+                waitingEl.innerHTML = '⏳ 正在处理验证...';
                 document.getElementById("chat-body").appendChild(waitingEl);
 
                 const formData = new FormData();
                 formData.append("validation_result", validation);
                 formData.append("comments", comments);
 
-                const response = await fetch("/validate", {
+                const response = await fetch(`${API_BASE}/validate`, {
                     method: "POST",
                     body: formData,
                     credentials: 'include'
@@ -1454,7 +1459,7 @@
                     <div>${marked.parse(result.response)}</div>
                     <div class="audio-controls mt-2">
                         <button class="btn btn-sm btn-outline-primary play-tts-btn">
-                            <i class="fas fa-play"></i> Play Voice Response
+                            <i class="fas fa-play"></i> 播放语音回复
                         </button>
                     </div>
                 `;
@@ -1472,7 +1477,7 @@
 
                         // Disable the button while generating speech
                         this.disabled = true;
-                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...';
 
                         try {
                             // Get the new audio URL
@@ -1491,20 +1496,20 @@
 
                             // Set event listeners for button updates
                             currentAudio.onplay = () => {
-                                this.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                                this.innerHTML = '<i class="fas fa-pause"></i> 暂停';
                                 this.classList.remove('btn-outline-primary');
                                 this.classList.add('btn-primary');
                                 this.disabled = false;
                             };
 
                             currentAudio.onpause = () => {
-                                this.innerHTML = '<i class="fas fa-play"></i> Play';
+                                this.innerHTML = '<i class="fas fa-play"></i> 播放';
                                 this.classList.remove('btn-primary');
                                 this.classList.add('btn-outline-primary');
                             };
 
                             currentAudio.onended = () => {
-                                this.innerHTML = '<i class="fas fa-play"></i> Play Again';
+                                this.innerHTML = '<i class="fas fa-play"></i> 重新播放';
                                 this.classList.remove('btn-primary');
                                 this.classList.add('btn-outline-primary');
                                 URL.revokeObjectURL(audioUrl);  // Free memory after playback
@@ -1524,7 +1529,7 @@
                             currentAudio.play();
                         } catch (error) {
                             console.error("TTS Error:", error);
-                            this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Voice failed';
+                            this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 语音失败';
                             this.disabled = false;
                         }
                     });
@@ -1539,7 +1544,7 @@
             if (!text) return '';
             
             // Remove code blocks
-            text = text.replace(/```[\s\S]*?```/g, 'Code block omitted for speech.');
+            text = text.replace(/```[\s\S]*?```/g, '代码块已省略。');
             
             // Remove inline code
             text = text.replace(/`([^`]+)`/g, '$1');
