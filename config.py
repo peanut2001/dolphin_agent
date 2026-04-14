@@ -21,11 +21,13 @@ load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
 API_BASE = os.getenv("OPENAI_API_BASE", "https://api.yunnet.top/v1")
 MODEL_NAME = os.getenv("MODEL_NAME", "claude-opus-4-6")
+EMBEDDING_MODEL_NAME = os.getenv("EMBEDDING_MODEL_NAME", "text-embedding-v4")
+EMBEDDING_DIM = int(os.getenv("EMBEDDING_DIM", "1536"))
 
-def create_llm(temperature: float = 0.3) -> ChatOpenAI:
+def create_llm(temperature: float = 0.3, model: str | None = None) -> ChatOpenAI:
     """Create a ChatOpenAI instance with common configuration."""
     return ChatOpenAI(
-        model=MODEL_NAME,
+        model=model or MODEL_NAME,
         openai_api_key=API_KEY,
         openai_api_base=API_BASE,
         temperature=temperature,
@@ -33,21 +35,30 @@ def create_llm(temperature: float = 0.3) -> ChatOpenAI:
 
 class AgentDecisoinConfig:
     def __init__(self):
-        self.llm = create_llm(temperature=0.1)  # Deterministic
+        self.llm = create_llm(
+            temperature=0.1,
+            model=os.getenv("DECISION_MODEL_NAME", MODEL_NAME),
+        )  # Deterministic
 
 class ConversationConfig:
     def __init__(self):
-        self.llm = create_llm(temperature=0.7)  # Creative but factual
+        self.llm = create_llm(
+            temperature=0.7,
+            model=os.getenv("CONVERSATION_MODEL_NAME", MODEL_NAME),
+        )  # Creative but factual
 
 class WebSearchConfig:
     def __init__(self):
-        self.llm = create_llm(temperature=0.3)  # Slightly creative but factual
+        self.llm = create_llm(
+            temperature=0.3,
+            model=os.getenv("WEB_SEARCH_MODEL_NAME", MODEL_NAME),
+        )  # Slightly creative but factual
         self.context_limit = 20     # include last 20 messsages (10 Q&A pairs) in history
 
 class RAGConfig:
     def __init__(self):
         self.vector_db_type = "qdrant"
-        self.embedding_dim = 1536  # Dimension for text-embedding-ada-002
+        self.embedding_dim = EMBEDDING_DIM
         self.distance_metric = "Cosine"
         self.use_local = True
         self.vector_local_path = "./data/qdrant_db"
@@ -59,14 +70,27 @@ class RAGConfig:
         self.chunk_size = 512
         self.chunk_overlap = 50
         self.embedding_model = OpenAIEmbeddings(
-            model=os.getenv("EMBEDDING_MODEL_NAME", "text-embedding-ada-002"),
+            model=EMBEDDING_MODEL_NAME,
+            dimensions=EMBEDDING_DIM,
             openai_api_key=API_KEY,
             openai_api_base=API_BASE,
         )
-        self.llm = create_llm(temperature=0.3)
-        self.summarizer_model = create_llm(temperature=0.5)
-        self.chunker_model = create_llm(temperature=0.0)
-        self.response_generator_model = create_llm(temperature=0.3)
+        self.llm = create_llm(
+            temperature=0.3,
+            model=os.getenv("RAG_MODEL_NAME", MODEL_NAME),
+        )
+        self.summarizer_model = create_llm(
+            temperature=0.5,
+            model=os.getenv("RAG_SUMMARIZER_MODEL_NAME", os.getenv("RAG_MODEL_NAME", MODEL_NAME)),
+        )
+        self.chunker_model = create_llm(
+            temperature=0.0,
+            model=os.getenv("RAG_CHUNKER_MODEL_NAME", os.getenv("RAG_MODEL_NAME", MODEL_NAME)),
+        )
+        self.response_generator_model = create_llm(
+            temperature=0.3,
+            model=os.getenv("RAG_RESPONSE_MODEL_NAME", os.getenv("RAG_MODEL_NAME", MODEL_NAME)),
+        )
         self.top_k = 5
         self.vector_search_type = 'similarity'  # or 'mmr'
 
@@ -90,7 +114,10 @@ class MedicalCVConfig:
         self.chest_xray_model_path = "./agents/image_analysis_agent/chest_xray_agent/models/covid_chest_xray_model.pth"
         self.skin_lesion_model_path = "./agents/image_analysis_agent/skin_lesion_agent/models/checkpointN25_.pth.tar"
         self.skin_lesion_segmentation_output_path = "./uploads/skin_lesion_output/segmentation_plot.png"
-        self.llm = create_llm(temperature=0.1)  # Keep deterministic for classification tasks
+        self.llm = create_llm(
+            temperature=0.1,
+            model=os.getenv("MEDICAL_CV_MODEL_NAME", MODEL_NAME),
+        )  # Keep deterministic for classification tasks
 
 class SpeechConfig:
     def __init__(self):
