@@ -1,4 +1,3 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -6,1435 +5,1746 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>海豚医疗智能助手</title>
     <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/chromatography.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --bg: #f3f7f8;
+            --bg-soft: rgba(255, 255, 255, 0.7);
+            --panel: rgba(255, 255, 255, 0.82);
+            --panel-strong: rgba(255, 255, 255, 0.96);
+            --line: rgba(28, 92, 106, 0.12);
+            --line-strong: rgba(28, 92, 106, 0.24);
+            --text: #14323a;
+            --muted: #65848d;
+            --primary: #0f9aa8;
+            --primary-deep: #0a6f82;
+            --primary-soft: #dff7fa;
+            --secondary: #12c2b3;
+            --accent: #ff8a65;
+            --accent-soft: #fff0ea;
+            --user-bubble: linear-gradient(135deg, #0f9aa8 0%, #0c7487 100%);
+            --assistant-bubble: linear-gradient(180deg, #ffffff 0%, #f4fbfc 100%);
+            --shadow-lg: 0 28px 60px rgba(26, 89, 101, 0.16);
+            --shadow-md: 0 18px 34px rgba(24, 80, 92, 0.12);
+            --shadow-sm: 0 8px 20px rgba(24, 80, 92, 0.08);
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 18px;
+            --radius-sm: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            min-height: 100%;
+        }
+
         body {
-            background-color: #f5f5f5;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .chat-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            height: 90vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .chat-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid #eaeaea;
-            background-color: #f8f9fa;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-        }
-        .chat-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-        .chat-footer {
-            padding: 15px;
-            border-top: 1px solid #eaeaea;
-            background-color: #f8f9fa;
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-        }
-        .message {
-            max-width: 80%;
-            margin-bottom: 15px;
-            padding: 10px 15px;
-            border-radius: 15px;
+            margin: 0;
+            color: var(--text);
+            font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(18, 194, 179, 0.18), transparent 26%),
+                radial-gradient(circle at top right, rgba(255, 138, 101, 0.15), transparent 20%),
+                linear-gradient(180deg, #f7fbfb 0%, #eef5f6 100%);
             position: relative;
         }
-        .user-message {
-            background-color: #e3f2fd;
-            color: #000;
-            align-self: flex-end;
-            border-bottom-right-radius: 0;
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(15, 154, 168, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 154, 168, 0.035) 1px, transparent 1px);
+            background-size: 32px 32px;
+            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5), transparent 92%);
+            pointer-events: none;
+            z-index: 0;
         }
-        .assistant-message {
-            background-color: #f5f5f5;
-            color: #000;
-            align-self: flex-start;
-            border-bottom-left-radius: 0;
+
+        button,
+        textarea,
+        input {
+            font: inherit;
         }
-        .agent-tag {
-            display: inline-block;
-            background-color: #ebf5ff;
-            color: #0d6efd;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.8em;
-            font-weight: bold;
-            margin-bottom: 5px;
+
+        button:focus-visible,
+        textarea:focus-visible,
+        input:focus-visible {
+            outline: 3px solid rgba(15, 154, 168, 0.22);
+            outline-offset: 2px;
         }
-        .message-input {
+
+        .app-shell {
+            position: relative;
+            z-index: 1;
+            padding: 28px 18px;
+        }
+
+        .sidebar-panel,
+        .chat-window {
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            background: var(--panel);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .sidebar-panel {
+            height: calc(100vh - 56px);
+            padding: 24px;
+            border-radius: var(--radius-xl);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            overflow: auto;
+        }
+
+        .brand-block {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .brand-mark {
+            width: 60px;
+            height: 60px;
             border-radius: 20px;
-            padding: 10px 15px;
-            resize: none;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            color: #fff;
+            font-size: 1.35rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            box-shadow: 0 18px 34px rgba(15, 154, 168, 0.28);
         }
-        .file-upload-container {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--primary-deep);
+            font-family: "Outfit", "Noto Sans SC", sans-serif;
         }
-        .file-upload-btn {
-            border: none;
-            color: white;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
+
+        .brand-block h1,
+        .header-copy h2,
+        .welcome-copy h3 {
+            font-family: "Outfit", "Noto Sans SC", sans-serif;
+            letter-spacing: -0.03em;
         }
-        .file-upload-input {
-            position: absolute;
-            top: 0;
-            right: 0;
+
+        .brand-block h1 {
+            margin: 8px 0 8px;
+            font-size: 1.9rem;
+            font-weight: 800;
+        }
+
+        .brand-block p,
+        .header-copy p,
+        .sidebar-card p,
+        .chat-subtitle,
+        .image-caption,
+        .message-time {
+            color: var(--muted);
+        }
+
+        .sidebar-card {
+            padding: 18px;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(244, 251, 252, 0.8) 100%);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sidebar-card.accent {
+            background: linear-gradient(145deg, rgba(15, 154, 168, 0.1) 0%, rgba(255, 255, 255, 0.88) 100%);
+        }
+
+        .card-title {
+            display: block;
+            margin-bottom: 14px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+
+        .sidebar-list {
             margin: 0;
             padding: 0;
-            font-size: 20px;
-            cursor: pointer;
-            opacity: 0;
-            filter: alpha(opacity=0);
+            list-style: none;
+            display: grid;
+            gap: 12px;
         }
-        .preview-container {
-            margin-top: 10px;
-            display: none;
+
+        .sidebar-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            line-height: 1.55;
         }
-        .preview-image {
-            max-width: 100px;
-            max-height: 100px;
-            border-radius: 5px;
+
+        .sidebar-list i,
+        .capability-list i {
+            color: var(--primary);
+            margin-top: 4px;
         }
-        .result-image {
-            max-width: 300px;
-            max-height: 300px;
-            border-radius: 5px;
-            margin-top: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+        .capability-list {
+            display: grid;
+            gap: 12px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
         }
-        .image-side-by-side {
+
+        .tip-pills {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-top: 10px;
         }
-        .image-container {
+
+        .tip-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(15, 154, 168, 0.08);
+            color: var(--primary-deep);
+            font-size: 0.86rem;
+            font-weight: 600;
+        }
+
+        .clear-btn {
+            width: 100%;
+            border: 0;
+            border-radius: 18px;
+            padding: 14px 18px;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #f56b5d 0%, #df4e5f 100%);
+            box-shadow: 0 16px 24px rgba(223, 78, 95, 0.24);
+            transition: transform 180ms ease, box-shadow 180ms ease;
+            margin-top: auto;
+        }
+
+        .clear-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 20px 28px rgba(223, 78, 95, 0.28);
+        }
+
+        .chat-window {
+            min-height: calc(100vh - 56px);
+            border-radius: 32px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 28px 30px 22px;
+            border-bottom: 1px solid var(--line);
+            background:
+                radial-gradient(circle at top right, rgba(255, 138, 101, 0.14), transparent 26%),
+                linear-gradient(135deg, rgba(15, 154, 168, 0.09) 0%, rgba(255, 255, 255, 0.94) 70%);
+        }
+
+        .header-main {
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            align-items: flex-start;
+            margin-bottom: 22px;
+        }
+
+        .header-copy h2 {
+            margin: 10px 0 10px;
+            font-size: clamp(1.8rem, 2vw, 2.35rem);
+            font-weight: 800;
+        }
+
+        .header-copy p {
+            max-width: 720px;
+            margin: 0;
+            line-height: 1.7;
+        }
+
+        .header-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(15, 154, 168, 0.12);
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--primary-deep);
+            white-space: nowrap;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .stat-card {
+            padding: 16px 18px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.78);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 0.84rem;
+        }
+
+        .stat-card strong {
+            font-family: "Outfit", "Noto Sans SC", sans-serif;
+            font-size: 1rem;
+        }
+
+        .chat-body {
             flex: 1;
-            min-width: 200px;
+            overflow-y: auto;
+            padding: 26px 26px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(245, 250, 251, 0.82)),
+                radial-gradient(circle at center, rgba(15, 154, 168, 0.04), transparent 45%);
         }
-        .image-caption {
-            font-size: 0.85em;
-            text-align: center;
-            margin-top: 5px;
-            color: #666;
-        }
-        .thinking {
+
+        .welcome-card {
             display: flex;
             align-items: center;
-            padding: 10px;
-        }
-        .dot {
-            height: 8px;
-            width: 8px;
-            margin-right: 5px;
-            background-color: #0d6efd;
-            border-radius: 50%;
-            display: inline-block;
-            animation: pulse 1.5s infinite ease-in-out;
-        }
-        .dot:nth-child(2) {
-            animation-delay: 0.3s;
-        }
-        .dot:nth-child(3) {
-            animation-delay: 0.6s;
-        }
-        @keyframes pulse {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(0.8); opacity: 0.5; }
-        }
-        .sidebar {
-            background-color: #f8f9fa;
+            gap: 18px;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            height: 90vh;
-            overflow-y: auto;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(15, 154, 168, 0.12) 0%, rgba(255, 255, 255, 0.95) 64%);
+            border: 1px solid rgba(15, 154, 168, 0.12);
+            box-shadow: var(--shadow-sm);
         }
-        .sidebar h5 {
-            margin-bottom: 15px;
-            border-bottom: 1px solid #eaeaea;
-            padding-bottom: 10px;
+
+        .welcome-icon {
+            width: 62px;
+            height: 62px;
+            border-radius: 22px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: #fff;
+            font-size: 1.45rem;
+            box-shadow: 0 18px 30px rgba(15, 154, 168, 0.24);
+            flex-shrink: 0;
         }
-        .agent-info {
-            margin-bottom: 15px;
+
+        .welcome-copy h3 {
+            margin: 10px 0 8px;
+            font-size: 1.5rem;
+            font-weight: 800;
         }
-        .agent-info h6 {
-            color: #0d6efd;
+
+        .welcome-copy p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
         }
-        @media (max-width: 768px) {
-            .sidebar {
-                height: auto;
-                margin-bottom: 15px;
-            }
+
+        .welcome-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
         }
-        
-        /* Table styling for markdown tables */
-        .message table {
-            border-collapse: collapse;
+
+        .welcome-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(15, 154, 168, 0.14);
+            color: var(--text);
+            font-size: 0.86rem;
+            font-weight: 600;
+        }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: min(86%, 820px);
+            animation: fadeUp 260ms ease;
+        }
+
+        .assistant-message {
+            align-self: flex-start;
+        }
+
+        .user-message {
+            align-self: flex-end;
+        }
+
+        .message-role {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-message .message-role {
+            justify-content: flex-end;
+        }
+
+        .agent-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: var(--primary-soft);
+            color: var(--primary-deep);
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+        }
+
+        .user-message .agent-tag {
+            background: rgba(255, 255, 255, 0.24);
+            color: rgba(255, 255, 255, 0.92);
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+        }
+
+        .message-bubble {
+            padding: 18px 18px 16px;
+            border-radius: 24px;
+            line-height: 1.72;
+            border: 1px solid transparent;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .assistant-message .message-bubble {
+            background: var(--assistant-bubble);
+            border-color: rgba(15, 154, 168, 0.08);
+            border-top-left-radius: 10px;
+        }
+
+        .user-message .message-bubble {
+            color: #fff;
+            background: var(--user-bubble);
+            border-top-right-radius: 10px;
+        }
+
+        .message-bubble p:last-child,
+        .message-bubble ul:last-child,
+        .message-bubble ol:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-bubble img {
+            max-width: 100%;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .message-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .audio-btn,
+        .action-btn,
+        .tool-btn,
+        .send-btn,
+        .preview-remove {
+            transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease;
+        }
+
+        .audio-btn,
+        .action-btn {
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-weight: 700;
+        }
+
+        .audio-btn:hover,
+        .action-btn:hover,
+        .tool-btn:hover,
+        .send-btn:hover,
+        .preview-remove:hover {
+            transform: translateY(-1px);
+        }
+
+        .image-side-by-side {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .image-container {
+            padding: 14px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.62);
+            border: 1px solid rgba(15, 154, 168, 0.1);
+        }
+
+        .result-image {
+            max-width: min(100%, 360px);
+            display: block;
+            margin-top: 14px;
+            border-radius: 18px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .image-caption {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.84rem;
+        }
+
+        .validation-panel {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(255, 138, 101, 0.12) 0%, rgba(255, 255, 255, 0.82) 100%);
+            border: 1px solid rgba(255, 138, 101, 0.18);
+        }
+
+        .validation-panel p {
+            margin-bottom: 12px;
+        }
+
+        .validation-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .validation-comments {
             width: 100%;
-            margin: 10px 0;
-            font-size: 0.9em;
+            border: 1px solid rgba(15, 154, 168, 0.14);
+            border-radius: 16px;
+            padding: 12px 14px;
+            min-height: 92px;
+            background: rgba(255, 255, 255, 0.88);
+            resize: vertical;
         }
-        
-        .message th, .message td {
-            border: 1px solid #ddd;
-            padding: 8px;
+
+        .thinking .message-bubble {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 56px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: pulse 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.18s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.36s;
+        }
+
+        .chat-footer {
+            padding: 20px 22px 22px;
+            border-top: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.68);
+        }
+
+        .composer {
+            padding: 18px;
+            border-radius: 26px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(244, 251, 252, 0.98) 100%);
+            border: 1px solid rgba(15, 154, 168, 0.12);
+            box-shadow: var(--shadow-md);
+        }
+
+        .composer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .composer-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .composer-title-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: rgba(15, 154, 168, 0.1);
+            color: var(--primary);
+            font-size: 1.05rem;
+        }
+
+        .composer-title strong {
+            display: block;
+            font-size: 1rem;
+        }
+
+        .composer-title span {
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .composer-hints {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .composer-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: var(--primary-deep);
+            background: rgba(15, 154, 168, 0.08);
+        }
+
+        .preview-container {
+            display: none;
+            margin-bottom: 14px;
+        }
+
+        .preview-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px;
+            border-radius: 20px;
+            background: rgba(15, 154, 168, 0.08);
+            border: 1px solid rgba(15, 154, 168, 0.12);
+        }
+
+        .preview-image {
+            width: 82px;
+            height: 82px;
+            object-fit: cover;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .preview-copy {
+            flex: 1;
+        }
+
+        .preview-copy strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .preview-copy span {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .preview-remove {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            border: 0;
+            color: #fff;
+            background: linear-gradient(135deg, #ff7a65 0%, #f35b58 100%);
+            box-shadow: 0 14px 22px rgba(243, 91, 88, 0.22);
+        }
+
+        .composer-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .tool-cluster {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .file-upload-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            border: 1px solid rgba(15, 154, 168, 0.12);
+            background: rgba(255, 255, 255, 0.96);
+            color: var(--primary-deep);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tool-btn--voice {
+            background: linear-gradient(135deg, rgba(255, 138, 101, 0.16) 0%, rgba(255, 255, 255, 0.95) 100%);
+            color: #da6447;
+        }
+
+        .tool-btn.recording {
+            color: #fff;
+            background: linear-gradient(135deg, #ff7a65 0%, #e34d5a 100%);
+            box-shadow: 0 18px 28px rgba(227, 77, 90, 0.24);
+        }
+
+        .file-upload-input {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .input-shell {
+            flex: 1;
+            padding: 12px 14px;
+            border-radius: 22px;
+            background: rgba(243, 248, 249, 0.88);
+            border: 1px solid rgba(15, 154, 168, 0.12);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        }
+
+        .message-input {
+            width: 100%;
+            min-height: 52px;
+            max-height: 180px;
+            border: 0;
+            outline: 0;
+            resize: none;
+            background: transparent;
+            color: var(--text);
+            line-height: 1.65;
+        }
+
+        .message-input::placeholder {
+            color: #7b98a0;
+        }
+
+        .send-btn {
+            min-width: 120px;
+            height: 52px;
+            border: 0;
+            border-radius: 18px;
+            color: #fff;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
+            box-shadow: 0 18px 28px rgba(15, 154, 168, 0.28);
+        }
+
+        .send-btn:disabled,
+        .tool-btn:disabled,
+        .audio-btn:disabled,
+        .action-btn:disabled,
+        .clear-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+        }
+
+        .inline-status {
+            margin-top: 12px;
+            padding: 11px 14px;
+            border-radius: 16px;
+            border: 1px solid transparent;
+            font-size: 0.92rem;
+        }
+
+        .inline-status.info {
+            color: var(--primary-deep);
+            background: rgba(15, 154, 168, 0.09);
+            border-color: rgba(15, 154, 168, 0.12);
+        }
+
+        .inline-status.error {
+            color: #aa493d;
+            background: rgba(255, 122, 101, 0.11);
+            border-color: rgba(255, 122, 101, 0.16);
+        }
+
+        .message table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+
+        .message th,
+        .message td {
+            padding: 10px 12px;
+            border: 1px solid rgba(15, 154, 168, 0.1);
             text-align: left;
         }
-        
+
         .message th {
-            background-color: #f2f2f2;
-            font-weight: bold;
+            background: rgba(15, 154, 168, 0.08);
         }
-        
+
         .message tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background: rgba(15, 154, 168, 0.03);
         }
-        
-        .message tr:hover {
-            background-color: #f0f0f0;
+
+        .message blockquote {
+            margin: 14px 0;
+            padding: 12px 16px;
+            border-left: 4px solid rgba(15, 154, 168, 0.24);
+            background: rgba(15, 154, 168, 0.05);
+            border-radius: 0 16px 16px 0;
+        }
+
+        .message pre {
+            padding: 14px;
+            border-radius: 16px;
+            background: #13333a;
+            color: #f6fffe;
+            overflow: auto;
+        }
+
+        .message code {
+            font-family: "Cascadia Code", "Fira Code", monospace;
+        }
+
+        .visually-hidden-input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(0.8);
+                opacity: 0.45;
+            }
+            50% {
+                transform: scale(1.15);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                transform: translateY(10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 1199.98px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-window,
+            .sidebar-panel {
+                min-height: auto;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 991.98px) {
+            .app-shell {
+                padding: 18px 14px;
+            }
+
+            .sidebar-panel {
+                height: auto;
+            }
+
+            .header-main {
+                flex-direction: column;
+            }
+
+            .header-badges,
+            .composer-hints {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .chat-header,
+            .chat-body,
+            .chat-footer {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            .composer {
+                padding: 16px;
+            }
+
+            .welcome-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .message,
+            .assistant-message,
+            .user-message {
+                max-width: 100%;
+            }
+
+            .image-side-by-side {
+                grid-template-columns: 1fr;
+            }
+
+            .composer-row {
+                flex-wrap: wrap;
+            }
+
+            .tool-cluster {
+                width: 100%;
+            }
+
+            .send-btn {
+                width: 100%;
+            }
+
+            .preview-card {
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .preview-remove {
+                margin-left: auto;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+                scroll-behavior: auto !important;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container-fluid py-4">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 mb-3">
-                <div class="sidebar">
-                    <h5>
-                        <i class="fas fa-robot me-2"></i>
-                        海豚医疗助手
-                    </h5>
-                    <div class="agent-info">
-                        <h6>可用智能体</h6>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-comment-medical me-2"></i> 医疗对话智能体</li>
-                            <li><i class="fas fa-database me-2"></i> 医疗知识检索智能体</li>
-                            <li><i class="fas fa-search me-2"></i> 网络搜索智能体</li>
-                        </ul>
-                    </div>
-                    <div class="agent-info">
-                        <h6>计算机视觉智能体</h6>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-brain me-2"></i> 脑肿瘤检测</li>
-                            <li><i class="fas fa-lungs me-2"></i> 胸部X光新冠分类</li>
-                            <li><i class="fas fa-allergies me-2"></i> 皮肤病变分割</li>
-                        </ul>
-                    </div>
-                    <div class="agent-info">
-                        <h6>智能体能力</h6>
-                        <ul class="list-unstyled">
-                            <li><strong>医疗知识检索智能体：</strong>
-                                <ul>
-                                    <li>基于 Docling 解析 PDF 中的文本、表格和图像</li>
-                                    <li>嵌入 Markdown 格式文本、表格和 LLM 图像摘要</li>
-                                    <li>基于 LLM 的语义分块与结构边界识别</li>
-                                    <li>基于 LLM 的查询扩展与医学术语关联</li>
-                                    <li>Qdrant 向量数据库混合搜索</li>
-                                    <li>输入输出安全护栏</li>
-                                    <li>基于置信度的网络搜索切换，防止幻觉</li>
-                                </ul>
-                            </li>
-                            <li><strong>人机协同验证：</strong>
-                                <ul>
-                                    <li>对视觉智能体结果进行人工审核</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="agent-info">
-                        <h6>多智能体协作</h6>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-project-diagram me-2"></i> 智能体间协调交互</li>
-                            <li><i class="fas fa-tasks me-2"></i> 基于能力的动态任务分配</li>
-                            <li><i class="fas fa-sync-alt me-2"></i> 无缝集成智能体响应</li>
-                        </ul>
-                    </div>
-                    <button id="clear-chat" class="btn btn-outline-danger w-100 mt-3">
-                        <i class="fas fa-trash me-2"></i> 清空对话
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Chat Container -->
-            <div class="col-md-9">
-                <div class="chat-container">
-                    <div class="chat-header">
-                        <h5 class="mb-0">
-                            <i class="fas fa-stethoscope me-2"></i>
-                            多智能体医疗助手
-                        </h5>
-                        <small class="text-muted">上传医学图像或提出健康相关问题</small>
-                    </div>
-                    
-                    <div id="chat-body" class="chat-body">
-                        <div class="message assistant-message">
-                            <div class="agent-tag">系统</div>
-                            <p>你好！我是你的医疗智能助手。你可以向我提出健康相关的问题，或上传医学图像进行分析。</p>
+    <div class="app-shell container-fluid">
+        <div class="row g-4">
+            <aside class="col-xl-3 col-lg-4">
+                <div class="sidebar-panel">
+                    <div class="brand-block">
+                        <div class="brand-mark">
+                            <i class="fas fa-heart-pulse"></i>
+                        </div>
+                        <div>
+                            <span class="eyebrow">Clinical AI Workspace</span>
+                            <h1>海豚医疗助手</h1>
+                            <p>把医学问答、影像分析、文献检索和人工复核收进一个更清晰的协作界面。</p>
                         </div>
                     </div>
-                    
-                    <div class="chat-footer">
-                        <form id="chat-form" class="d-flex align-items-end">
-                            <div class="file-upload-container me-2">
-                                <button type="button" class="file-upload-btn btn btn-primary">
-                                    <i class="fas fa-paperclip"></i>
-                                </button>
-                                <input type="file" class="file-upload-input" id="image-upload" accept="image/*">
+
+                    <div class="sidebar-card">
+                        <span class="card-title">可用智能体</span>
+                        <ul class="sidebar-list">
+                            <li><i class="fas fa-comment-medical"></i><span>医疗对话智能体，处理症状咨询与健康问答。</span></li>
+                            <li><i class="fas fa-database"></i><span>医疗知识检索智能体，联合 RAG 与结构化文档内容作答。</span></li>
+                            <li><i class="fas fa-globe"></i><span>网络搜索智能体，在置信度不足时补充最新公开信息。</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-card accent">
+                        <span class="card-title">影像分析能力</span>
+                        <ul class="sidebar-list">
+                            <li><i class="fas fa-brain"></i><span>脑肿瘤检测，辅助识别脑部相关影像特征。</span></li>
+                            <li><i class="fas fa-lungs"></i><span>胸部 X 光分析，支持新冠相关分类任务。</span></li>
+                            <li><i class="fas fa-allergies"></i><span>皮肤病变分割，输出原图与分割结果对照。</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <span class="card-title">系统亮点</span>
+                        <ul class="capability-list">
+                            <li><i class="fas fa-layer-group"></i><span>Docling + 向量检索整合文本、表格与图像摘要。</span></li>
+                            <li><i class="fas fa-shield-heart"></i><span>输入输出安全护栏与人机协同验证流程。</span></li>
+                            <li><i class="fas fa-people-arrows"></i><span>多智能体动态分工，尽量减少单一路径幻觉。</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <span class="card-title">快速提示</span>
+                        <div class="tip-pills">
+                            <span class="tip-pill">支持 PNG / JPG / JPEG</span>
+                            <span class="tip-pill">可语音转写输入</span>
+                            <span class="tip-pill">结果支持人工复核</span>
+                        </div>
+                    </div>
+
+                    <button id="clear-chat" class="clear-btn" type="button">
+                        <i class="fas fa-trash-can me-2"></i>清空对话
+                    </button>
+                </div>
+            </aside>
+
+            <main class="col-xl-9 col-lg-8">
+                <div class="chat-window">
+                    <header class="chat-header">
+                        <div class="header-main">
+                            <div class="header-copy">
+                                <span class="eyebrow">Medical Command Center</span>
+                                <h2>多智能体医疗诊断与问答工作台</h2>
+                                <p>上传影像、提出问题或直接使用语音输入。系统会根据任务类型路由到最合适的医疗智能体，并在需要时提供人工验证环节。</p>
                             </div>
-                            
-                            <div class="flex-grow-1">
+                            <div class="header-badges">
+                                <span class="status-badge"><i class="fas fa-message"></i>文字问答</span>
+                                <span class="status-badge"><i class="fas fa-image"></i>图像分析</span>
+                                <span class="status-badge"><i class="fas fa-microphone-lines"></i>语音输入</span>
+                            </div>
+                        </div>
+
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <span class="stat-label">协作模式</span>
+                                <strong>多智能体分流与联合响应</strong>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-label">诊断支持</span>
+                                <strong>问答、检索、影像分析、复核</strong>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-label">输入方式</span>
+                                <strong>文本 / 图像 / 语音</strong>
+                            </div>
+                        </div>
+                    </header>
+
+                    <section id="chat-body" class="chat-body" aria-live="polite"></section>
+
+                    <footer class="chat-footer">
+                        <div class="composer">
+                            <div class="composer-top">
+                                <div class="composer-title">
+                                    <div class="composer-title-icon">
+                                        <i class="fas fa-wand-magic-sparkles"></i>
+                                    </div>
+                                    <div>
+                                        <strong>开始一次新的医学分析</strong>
+                                        <span>建议尽量描述症状、时间线和检查背景，系统会更容易给出高质量回复。</span>
+                                    </div>
+                                </div>
+                                <div class="composer-hints">
+                                    <span class="composer-hint"><i class="fas fa-shield-heart"></i>安全护栏开启</span>
+                                    <span class="composer-hint"><i class="fas fa-arrows-rotate"></i>支持连续对话</span>
+                                </div>
+                            </div>
+
+                            <form id="chat-form">
                                 <div class="preview-container" id="preview-container">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <img id="preview-image" class="preview-image me-2" src="">
-                                        <button type="button" class="btn btn-sm btn-outline-danger" id="remove-image">
-                                            <i class="fas fa-times"></i>
+                                    <div class="preview-card">
+                                        <img id="preview-image" class="preview-image" src="" alt="待发送图像预览">
+                                        <div class="preview-copy">
+                                            <strong>待分析图像已就绪</strong>
+                                            <span>可以补充文字说明，例如拍摄部位、病史或想确认的问题。</span>
+                                        </div>
+                                        <button type="button" class="preview-remove" id="remove-image" aria-label="移除图像">
+                                            <i class="fas fa-xmark"></i>
                                         </button>
                                     </div>
                                 </div>
-                                <textarea id="message-input" class="form-control message-input" rows="1" placeholder="请输入医疗相关问题..."></textarea>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary rounded-circle ms-2" style="width: 40px; height: 40px;">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </form>
-                    </div>
+
+                                <div class="composer-row">
+                                    <div class="tool-cluster">
+                                        <div class="file-upload-container">
+                                            <button type="button" class="tool-btn" aria-label="上传医学图像">
+                                                <i class="fas fa-paperclip"></i>
+                                            </button>
+                                            <input type="file" class="file-upload-input" id="image-upload" accept="image/*" aria-label="上传医学图像">
+                                        </div>
+                                    </div>
+
+                                    <div class="input-shell">
+                                        <label class="visually-hidden-input" for="message-input">输入医疗问题</label>
+                                        <textarea id="message-input" class="message-input" rows="1" placeholder="输入医疗问题，或结合上传图像描述你想确认的内容..."></textarea>
+                                    </div>
+
+                                    <button type="submit" class="send-btn" id="send-button">
+                                        <i class="fas fa-paper-plane"></i>
+                                        <span>发送</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </footer>
                 </div>
-            </div>
+            </main>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
     <script>
-        // API base URL - change this to match your backend server address
-        const API_BASE = 'http://localhost:8000';
+        const API_BASE = "http://localhost:8000";
+        const WELCOME_HTML = `
+            <div class="welcome-card">
+                <div class="welcome-icon">
+                    <i class="fas fa-stethoscope"></i>
+                </div>
+                <div class="welcome-copy">
+                    <span class="agent-tag">系统引导</span>
+                    <h3>欢迎来到海豚医疗智能工作台</h3>
+                    <p>可以直接输入健康相关问题，也可以上传医学影像交给专业智能体分析。若任务需要复核，界面会自动展示人工验证入口。</p>
+                    <div class="welcome-chips">
+                        <span class="welcome-chip"><i class="fas fa-comment-dots"></i>医疗问答</span>
+                        <span class="welcome-chip"><i class="fas fa-x-ray"></i>影像分析</span>
+                        <span class="welcome-chip"><i class="fas fa-microphone-lines"></i>语音转写</span>
+                        <span class="welcome-chip"><i class="fas fa-user-doctor"></i>人工复核</span>
+                    </div>
+                </div>
+            </div>
+            <div class="message assistant-message">
+                <div class="message-role">
+                    <div class="agent-tag">系统</div>
+                    <span class="message-time">就绪</span>
+                </div>
+                <div class="message-bubble">
+                    <p>你好，我是你的医疗智能助手。你可以描述症状、检查背景和既往病史，也可以上传图像让我协助分析。</p>
+                </div>
+            </div>
+        `;
 
-        // let mediaRecorder;
-        // let audioChunks = [];
-        // let isRecording = false;
-        // let audioContext;
-        // let currentAudio = null;  // Store a single audio instance
-        // // let elevenlabsApiKey = 'sk_4c9d3dfca9e183c7e8a7c0b9c6f7483e074ded17251e5fe7'; // Replace with your actual API key
-        // let selectedVoiceId = '21m00Tcm4TlvDq8ikWAM'; // Default voice ID (Rachel)
-
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     const chatBody = document.getElementById('chat-body');
-        //     const chatForm = document.getElementById('chat-form');
-        //     const messageInput = document.getElementById('message-input');
-        //     const imageUpload = document.getElementById('image-upload');
-        //     const previewContainer = document.getElementById('preview-container');
-        //     const previewImage = document.getElementById('preview-image');
-        //     const removeImageBtn = document.getElementById('remove-image');
-        //     const clearChatBtn = document.getElementById('clear-chat');
-
-        //     // Add voice recording button to the UI
-        //     const fileUploadContainer = document.querySelector('.file-upload-container');
-        //     // const voiceButtonHTML = `
-        //     //     <button type="button" class="btn btn-warning rounded-circle ms-2" id="voice-record-btn" style="width: 40px; height: 40px;">
-        //     //         <i class="fas fa-microphone"></i>
-        //     //     </button>
-        //     // `;
-        //     const voiceButtonHTML = `
-        //         <button type="button" class="btn btn-warning rounded-circle ms-2 me-2" id="voice-record-btn" style="width: 40px; height: 40px;">
-        //             <i class="fas fa-microphone"></i>
-        //         </button>
-        //     `;
-        //     fileUploadContainer.insertAdjacentHTML('afterend', voiceButtonHTML);
-            
-        //     const voiceRecordBtn = document.getElementById('voice-record-btn');
-            
-        //     // Voice recording functionality
-        //     voiceRecordBtn.addEventListener('click', toggleRecording);
-            
-        //     // Initialize audio context
-        //     try {
-        //         window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        //         audioContext = new AudioContext();
-        //     } catch (e) {
-        //         console.error('Web Audio API is not supported in this browser');
-        //     }
-            
-        //     // We no longer need to store conversation history in frontend
-        //     // Only maintain display messages
-        //     let displayMessages = [];
-            
-        //     // Auto-resize textarea
-        //     messageInput.addEventListener('input', function() {
-        //         this.style.height = 'auto';
-        //         this.style.height = (this.scrollHeight) + 'px';
-        //     });
-            
-        //     // Handle image upload
-        //     imageUpload.addEventListener('change', function(e) {
-        //         if (e.target.files.length > 0) {
-        //             const file = e.target.files[0];
-        //             const reader = new FileReader();
-                    
-        //             reader.onload = function(e) {
-        //                 previewImage.src = e.target.result;
-        //                 previewContainer.style.display = 'block';
-        //             };
-                    
-        //             reader.readAsDataURL(file);
-        //         }
-        //     });
-            
-        //     // Remove image preview
-        //     removeImageBtn.addEventListener('click', function() {
-        //         imageUpload.value = '';
-        //         previewContainer.style.display = 'none';
-        //         previewImage.src = '';
-        //     });
-            
-        //     // Clear chat (only visual)
-        //     clearChatBtn.addEventListener('click', function() {
-        //         displayMessages = [];
-        //         chatBody.innerHTML = `
-        //             <div class="message assistant-message">
-        //                 <div class="agent-tag">System</div>
-        //                 <p>Hello! I'm your medical assistant. You can ask me health-related questions or upload medical images for analysis.</p>
-        //             </div>
-        //         `;
-        //     });
-            
-        //     // Handle form submission
-        //     chatForm.addEventListener('submit', async function(e) {
-        //         e.preventDefault();
-                
-        //         // Get message from input or transcribed text
-        //         const message = messageInput.value.trim();
-        //         if (!message && !imageUpload.files.length) return;
-                
-        //         // Store image data if available
-        //         let imageDataUrl = null;
-        //         if (imageUpload.files.length > 0) {
-        //             imageDataUrl = previewImage.src;
-        //         }
-                
-        //         // Add user message to chat
-        //         const userMessageElement = document.createElement('div');
-        //         userMessageElement.className = 'message user-message';
-                
-        //         // Create message content with image if available
-        //         let messageContent = `<p>${message}</p>`;
-        //         if (imageDataUrl) {
-        //             messageContent += `
-        //                 <div class="mt-2">
-        //                     <img src="${imageDataUrl}" alt="Uploaded image" class="img-fluid rounded" style="max-height: 200px;">
-        //                 </div>
-        //             `;
-        //         }
-                
-        //         userMessageElement.innerHTML = messageContent;
-        //         chatBody.appendChild(userMessageElement);
-                
-        //         // Add thinking indicator
-        //         const thinkingElement = document.createElement('div');
-        //         thinkingElement.className = 'message assistant-message thinking';
-        //         thinkingElement.innerHTML = `
-        //             <div class="dot"></div>
-        //             <div class="dot"></div>
-        //             <div class="dot"></div>
-        //         `;
-        //         chatBody.appendChild(thinkingElement);
-                
-        //         // Scroll to bottom
-        //         chatBody.scrollTop = chatBody.scrollHeight;
-                
-        //         // Clear input
-        //         messageInput.value = '';
-        //         messageInput.style.height = 'auto';
-                
-        //         // Create form data
-        //         const formData = new FormData();
-        //         formData.append('message', message);
-                
-        //         // Add image if available
-        //         if (imageUpload.files.length > 0) {
-        //             formData.append('file', imageUpload.files[0]);
-        //         }
-                
-        //         try {
-        //             // Send to backend
-        //             const response = await fetch('/send_message', {
-        //                 method: 'POST',
-        //                 body: formData,
-        //                 credentials: 'include' // Important for cookie handling
-        //             });
-                    
-        //             const data = await response.json();
-                    
-        //             // Remove thinking indicator
-        //             chatBody.removeChild(thinkingElement);
-                    
-        //             // Add response to chat
-        //             const assistantMessageElement = document.createElement('div');
-        //             assistantMessageElement.className = 'message assistant-message';
-                    
-        //             // Get clean text for TTS (without markdown)
-        //             const cleanText = removeMarkdown(data.response);
-                    
-        //             // Build HTML content for the response with audio controls
-        //             let assistantHtml = `
-        //                 <div class="agent-tag">${data.agent}</div>
-        //                 <div>${marked.parse(data.response)}</div>
-        //                 <div class="audio-controls mt-2">
-        //                     <button class="btn btn-sm btn-outline-primary play-tts-btn">
-        //                         <i class="fas fa-play"></i> Play Voice Response
-        //                     </button>
-        //                 </div>
-        //             `;
-
-        //             // After building the existing assistantHtml, add this:
-        //             if (data.agent.includes("HUMAN_VALIDATION")) {
-        //                 assistantHtml += `
-        //                     <div class="mt-3 p-3 border rounded bg-light">
-        //                         <p><strong>⚠️ Human Validation Required:</strong> Do you agree with this result?</p>
-        //                         <button class="btn btn-success btn-sm validate-btn" data-validation="yes">✔ Yes</button>
-        //                         <button class="btn btn-danger btn-sm validate-btn" data-validation="no">✖ No</button>
-        //                         <textarea class="form-control mt-2 validation-comments" rows="2" placeholder="Add comments (optional)"></textarea>
-        //                     </div>
-        //                 `;
-        //             }
-                    
-        //             // Add result image if it exists
-        //             if (data.result_image) {
-        //                 // If the skin lesion segmentation agent was used and both the user uploaded
-        //                 // an image and we have a result image, display them side by side
-        //                 if (data.agent === "SKIN_LESION_AGENT, HUMAN_VALIDATION" && imageDataUrl) {
-        //                     assistantHtml += `
-        //                         <div class="image-side-by-side">
-        //                             <div class="image-container">
-        //                                 <img src="${imageDataUrl}" alt="Original image" class="img-fluid rounded">
-        //                                 <div class="image-caption">Original Image</div>
-        //                             </div>
-        //                             <div class="image-container">
-        //                                 <img src="${data.result_image}" alt="Segmented image" class="img-fluid rounded">
-        //                                 <div class="image-caption">Segmentation Result</div>
-        //                             </div>
-        //                         </div>
-        //                     `;
-        //                 } else {
-        //                     // Otherwise just show the result image
-        //                     assistantHtml += `
-        //                         <div class="mt-3">
-        //                             <img src="${data.result_image}" alt="Result image" class="result-image">
-        //                         </div>
-        //                     `;
-        //                 }
-        //             }
-                    
-        //             assistantMessageElement.innerHTML = assistantHtml;
-        //             chatBody.appendChild(assistantMessageElement);
-
-        //             // Attach validation button events if human validation is required
-        //             if (data.agent.includes("HUMAN_VALIDATION")) {
-        //                 document.querySelectorAll('.validate-btn').forEach(button => {
-        //                     button.addEventListener('click', async function () {
-        //                         const validation = this.getAttribute('data-validation');
-        //                         // Use the closest container to get the textarea value
-        //                         const comments = this.closest('.p-3').querySelector('.validation-comments').value;
-        //                         await sendValidation(validation, comments);
-        //                     });
-        //                 });
-        //             }
-
-                    
-        //             // Get the play button and add click event to speak text
-        //             const playButton = assistantMessageElement.querySelector('.play-tts-btn');
-
-        //             playButton.addEventListener('click', async function () {
-        //                 // Get a reasonable amount of text to convert to speech (limit to 1000 chars to keep requests smaller)
-        //                 const textForSpeech = cleanText.length > 1000 ? cleanText.substring(0, 1000) + "..." : cleanText;
-
-        //                 // Disable the button while generating speech
-        //                 this.disabled = true;
-        //                 this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
-
-        //                 try {
-        //                     // Get the new audio URL
-        //                     const audioUrl = await generateSpeech(textForSpeech);
-
-        //                     // Stop and clean up previous audio if playing
-        //                     if (currentAudio) {
-        //                         currentAudio.pause();
-        //                         currentAudio.currentTime = 0;
-        //                         URL.revokeObjectURL(currentAudio.src);  // Free up memory
-        //                         currentAudio = null;  // Clear the reference
-        //                     }
-
-        //                     // Create a new audio element for the new speech
-        //                     currentAudio = new Audio(audioUrl);
-
-        //                     // Set event listeners for button updates
-        //                     currentAudio.onplay = () => {
-        //                         this.innerHTML = '<i class="fas fa-pause"></i> Pause';
-        //                         this.classList.remove('btn-outline-primary');
-        //                         this.classList.add('btn-primary');
-        //                         this.disabled = false;
-        //                     };
-
-        //                     currentAudio.onpause = () => {
-        //                         this.innerHTML = '<i class="fas fa-play"></i> Play';
-        //                         this.classList.remove('btn-primary');
-        //                         this.classList.add('btn-outline-primary');
-        //                     };
-
-        //                     currentAudio.onended = () => {
-        //                         this.innerHTML = '<i class="fas fa-play"></i> Play Again';
-        //                         this.classList.remove('btn-primary');
-        //                         this.classList.add('btn-outline-primary');
-        //                         URL.revokeObjectURL(audioUrl);  // Free memory after playback
-        //                         currentAudio = null;  // Ensure reference is cleared
-        //                     };
-
-        //                     // Toggle play/pause on button click
-        //                     this.onclick = () => {
-        //                         if (currentAudio && currentAudio.paused) {
-        //                             currentAudio.play();
-        //                         } else {
-        //                             currentAudio.pause();
-        //                         }
-        //                     };
-
-        //                     // Play the generated speech
-        //                     currentAudio.play();
-        //                 } catch (error) {
-        //                     console.error("TTS Error:", error);
-        //                     this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 语音失败';
-        //                     this.disabled = false;
-        //                 }
-        //             });
-
-                    
-        //             // Auto-play the voice response if needed
-        //             // Uncomment the next line to automatically play the voice response
-        //             // playButton.click();
-                    
-        //             // Store messages for display purposes only
-        //             displayMessages.push({
-        //                 role: "user",
-        //                 content: message,
-        //                 image: imageDataUrl
-        //             });
-                    
-        //             displayMessages.push({
-        //                 role: "assistant",
-        //                 content: data.response,
-        //                 agent: data.agent,
-        //                 resultImage: data.result_image
-        //             });
-                    
-        //             // Clear file upload preview
-        //             imageUpload.value = '';
-        //             previewContainer.style.display = 'none';
-                    
-        //         } catch (error) {
-        //             console.error("Error:", error);
-        //             // Remove thinking indicator
-        //             chatBody.removeChild(thinkingElement);
-                    
-        //             // Add error message
-        //             const errorElement = document.createElement('div');
-        //             errorElement.className = 'message assistant-message';
-        //             errorElement.innerHTML = `
-        //                 <div class="agent-tag">System</div>
-        //                 <p class="text-danger">Sorry, there was an error processing your request. Please try again.</p>
-        //             `;
-        //             chatBody.appendChild(errorElement);
-        //         }
-                
-        //         // Scroll to bottom again
-        //         chatBody.scrollTop = chatBody.scrollHeight;
-        //     });
-
-        //     // Allow sending message with Enter key
-        //     messageInput.addEventListener('keydown', function(e) {
-        //         if (e.key === 'Enter' && !e.shiftKey) {
-        //             e.preventDefault();
-        //             chatForm.dispatchEvent(new Event('submit'));
-        //         }
-        //     });
-        // });
-
-        // // Speech Recorder button function
-        // function toggleRecording() {
-        //     const voiceButton = document.getElementById('voice-record-btn');
-            
-        //     if (!isRecording) {
-        //         // Start recording
-        //         navigator.mediaDevices.getUserMedia({ audio: true })
-        //             .then(stream => {
-        //                 // mediaRecorder = new MediaRecorder(stream);
-        //                 mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-        //                 audioChunks = [];
-                        
-        //                 mediaRecorder.addEventListener('dataavailable', event => {
-        //                     audioChunks.push(event.data);
-        //                 });
-                        
-        //                 mediaRecorder.addEventListener('stop', () => {
-        //                     // const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        //                     const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType });
-        //                     transcribeSpeech(audioBlob);
-                            
-        //                     // Reset UI
-        //                     voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
-        //                     voiceButton.classList.remove('btn-danger');
-        //                     voiceButton.classList.add('btn-warning');
-        //                 });
-                        
-        //                 // Start recording
-        //                 mediaRecorder.start();
-        //                 isRecording = true;
-                        
-        //                 // Update UI
-        //                 voiceButton.innerHTML = '<i class="fas fa-stop"></i>';
-        //                 voiceButton.classList.remove('btn-warning');
-        //                 voiceButton.classList.add('btn-danger');
-        //             })
-        //             .catch(error => {
-        //                 console.error('Error accessing microphone:', error);
-        //                 alert('Could not access microphone. Please check your browser permissions.');
-        //             });
-        //     } else {
-        //         // Stop recording
-        //         mediaRecorder.stop();
-        //         isRecording = false;
-                
-        //         // Update UI to show processing
-        //         voiceButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        //         voiceButton.disabled = true;
-                
-        //         // Each track needs to be stopped to turn off the microphone
-        //         mediaRecorder.stream.getTracks().forEach(track => track.stop());
-        //     }
-        // }
-
-        // function transcribeSpeech(audioBlob) {
-        //     const voiceButton = document.getElementById('voice-record-btn');
-        //     const messageInput = document.getElementById('message-input');
-            
-        //     // Create a temporary element to display processing status
-        //     const statusElement = document.createElement('div');
-        //     statusElement.className = 'alert alert-info mt-2';
-        //     statusElement.innerHTML = 'Processing voice input...';
-        //     document.querySelector('.chat-footer').prepend(statusElement);
-            
-        //     // Always use server-side transcription for recorded audio
-        //     const formData = new FormData();
-        //     formData.append('audio', audioBlob);
-            
-        //     fetch('/transcribe', {
-        //         method: 'POST',
-        //         body: formData
-        //     })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         if (data.transcript) {
-        //             messageInput.value = data.transcript;
-        //             messageInput.focus();
-        //         } else {
-        //             throw new Error('Transcription failed');
-        //         }
-        //     })
-        //     .catch(error => {
-        //         console.error('Transcription error:', error);
-        //         statusElement.className = 'alert alert-danger mt-2';
-        //         statusElement.innerHTML = 'Failed to transcribe speech. Please try again or type your message.';
-        //     })
-        //     .finally(() => {
-        //         // Clean up
-        //         setTimeout(() => {
-        //             statusElement.remove();
-        //             voiceButton.disabled = false;
-        //             voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
-        //         }, 3000);
-        //     });
-        // }
-
-        // // Function to generate speech using ElevenLabs API
-        // // Function to generate speech using the secure backend
-        // async function generateSpeech(text) {
-        //     try {
-        //         const response = await fetch('/generate-speech', {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json'
-        //             },
-        //             body: JSON.stringify({
-        //                 text: text,
-        //                 voice_id: selectedVoiceId  // Replace with the correct voice ID
-        //             })
-        //         });
-
-        //         if (!response.ok) {
-        //             throw new Error(`HTTP error! status: ${response.status}`);
-        //         }
-
-        //         // Convert response to a playable audio blob
-        //         const audioBlob = await response.blob();
-        //         return URL.createObjectURL(audioBlob);
-        //     } catch (error) {
-        //         console.error("Error generating speech:", error);
-        //         throw error;
-        //     }
-        // }
-
-        // // Function to send human validated response
-        // async function sendValidation(validation, comments) {
-        //     try {
-        //         // Create and display a waiting element
-        //         const waitingEl = document.createElement('div');
-        //         waitingEl.className = 'alert alert-info mt-2';
-        //         waitingEl.innerHTML = '⏳ Processing validation...';
-        //         document.getElementById("chat-body").appendChild(waitingEl);
-
-        //         const formData = new FormData();
-        //         formData.append("validation_result", validation);
-        //         formData.append("comments", comments);
-
-        //         const response = await fetch("/send_validation", {
-        //             method: "POST",
-        //             body: formData,
-        //             credentials: 'include'
-        //         });
-
-        //         const result = await response.json();
-
-        //         // Remove waiting indicator
-        //         waitingEl.remove();
-
-        //         // Build validated message HTML with audio controls added
-        //         const validationMsg = document.createElement("div");
-        //         validationMsg.className = "message assistant-message";
-        //         validationMsg.innerHTML = `
-        //             <div class="agent-tag">HUMAN_VALIDATED</div>
-        //             <div>${marked.parse(result.message)}</div>
-        //             <div>${marked.parse(result.response)}</div>
-        //             <div class="audio-controls mt-2">
-        //                 <button class="btn btn-sm btn-outline-primary play-tts-btn">
-        //                     <i class="fas fa-play"></i> Play Voice Response
-        //                 </button>
-        //             </div>
-        //         `;
-        //         document.getElementById("chat-body").appendChild(validationMsg);
-
-        //         // Get clean text for TTS (without markdown)
-        //         const cleanText = removeMarkdown(result.response);
-
-        //         // Attach event listener for TTS for validation message
-        //         const playButton = validationMsg.querySelector('.play-tts-btn');
-        //         if (playButton) {
-        //             playButton.addEventListener('click', async function () {
-
-        //                 // Get a reasonable amount of text to convert to speech (limit to 1000 chars to keep requests smaller)
-        //                 const textForSpeech = cleanText.length > 1000 ? cleanText.substring(0, 1000) + "..." : cleanText;
-
-        //                 // Disable the button while generating speech
-        //                 this.disabled = true;
-        //                 this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
-
-
-        //                 try {
-        //                     // Get the new audio URL
-        //                     const audioUrl = await generateSpeech(textForSpeech);
-
-        //                     // Stop and clean up previous audio if playing
-        //                     if (currentAudio) {
-        //                         currentAudio.pause();
-        //                         currentAudio.currentTime = 0;
-        //                         URL.revokeObjectURL(currentAudio.src);  // Free up memory
-        //                         currentAudio = null;  // Clear the reference
-        //                     }
-
-        //                     // Create a new audio element for the new speech
-        //                     currentAudio = new Audio(audioUrl);
-
-        //                     // Set event listeners for button updates
-        //                     currentAudio.onplay = () => {
-        //                         this.innerHTML = '<i class="fas fa-pause"></i> Pause';
-        //                         this.classList.remove('btn-outline-primary');
-        //                         this.classList.add('btn-primary');
-        //                         this.disabled = false;
-        //                     };
-
-        //                     currentAudio.onpause = () => {
-        //                         this.innerHTML = '<i class="fas fa-play"></i> Play';
-        //                         this.classList.remove('btn-primary');
-        //                         this.classList.add('btn-outline-primary');
-        //                     };
-
-        //                     currentAudio.onended = () => {
-        //                         this.innerHTML = '<i class="fas fa-play"></i> Play Again';
-        //                         this.classList.remove('btn-primary');
-        //                         this.classList.add('btn-outline-primary');
-        //                         URL.revokeObjectURL(audioUrl);  // Free memory after playback
-        //                         currentAudio = null;  // Ensure reference is cleared
-        //                     };
-
-        //                     // Toggle play/pause on button click
-        //                     this.onclick = () => {
-        //                         if (currentAudio && currentAudio.paused) {
-        //                             currentAudio.play();
-        //                         } else {
-        //                             currentAudio.pause();
-        //                         }
-        //                     };
-
-        //                     // Play the generated speech
-        //                     currentAudio.play();
-        //                 } catch (error) {
-        //                     console.error("TTS Error:", error);
-        //                     this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 语音失败';
-        //                     this.disabled = false;
-        //                 }
-
-        //             });
-        //         }
-        //     } catch (error) {
-        //         console.error("Validation submission failed:", error);
-        //     }
-        // }
-
-        // // Helper function to remove markdown for clean TTS
-        // function removeMarkdown(text) {
-        //     if (!text) return '';
-            
-        //     // Remove code blocks
-        //     text = text.replace(/```[\s\S]*?```/g, 'Code block omitted for speech.');
-            
-        //     // Remove inline code
-        //     text = text.replace(/`([^`]+)`/g, '$1');
-            
-        //     // Remove headers
-        //     text = text.replace(/#{1,6}\s+/g, '');
-            
-        //     // Remove bold/italic markers
-        //     text = text.replace(/(\*\*|__)(.*?)\1/g, '$2');
-        //     text = text.replace(/(\*|_)(.*?)\1/g, '$2');
-            
-        //     // Remove list markers
-        //     text = text.replace(/^\s*[\*\-+]\s+/gm, '');
-        //     text = text.replace(/^\s*\d+\.\s+/gm, '');
-            
-        //     // Remove links, keep text
-        //     text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
-            
-        //     // Remove images
-        //     text = text.replace(/!\[([^\]]+)\]\([^)]+\)/g, 'Image: $1');
-            
-        //     // Remove blockquotes
-        //     text = text.replace(/^\>\s+/gm, '');
-            
-        //     // Handle line breaks sensibly for speech
-        //     text = text.replace(/\n{2,}/g, '. ');
-        //     text = text.replace(/\n/g, ' ');
-            
-        //     return text;
-        // }
         let mediaRecorder;
         let audioChunks = [];
         let isRecording = false;
         let audioContext;
-        let currentAudio = null;  // Store a single audio instance
-        let selectedVoiceId = '21m00Tcm4TlvDq8ikWAM'; // Default voice ID (Rachel)
+        let currentAudio = null;
+        let currentAudioUrl = null;
+        let currentAudioButton = null;
+        let selectedVoiceId = "21m00Tcm4TlvDq8ikWAM";
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const chatBody = document.getElementById('chat-body');
-            const chatForm = document.getElementById('chat-form');
-            const messageInput = document.getElementById('message-input');
-            const imageUpload = document.getElementById('image-upload');
-            const previewContainer = document.getElementById('preview-container');
-            const previewImage = document.getElementById('preview-image');
-            const removeImageBtn = document.getElementById('remove-image');
-            const clearChatBtn = document.getElementById('clear-chat');
+        marked.setOptions({
+            breaks: true,
+            gfm: true
+        });
 
-            // Add voice recording button to the UI
-            const fileUploadContainer = document.querySelector('.file-upload-container');
-            const voiceButtonHTML = `
-                <button type="button" class="btn btn-warning rounded-circle ms-2 me-2" id="voice-record-btn" style="width: 40px; height: 40px;">
+        document.addEventListener("DOMContentLoaded", function() {
+            const chatBody = document.getElementById("chat-body");
+            const chatForm = document.getElementById("chat-form");
+            const messageInput = document.getElementById("message-input");
+            const imageUpload = document.getElementById("image-upload");
+            const previewContainer = document.getElementById("preview-container");
+            const previewImage = document.getElementById("preview-image");
+            const removeImageBtn = document.getElementById("remove-image");
+            const clearChatBtn = document.getElementById("clear-chat");
+            const sendButton = document.getElementById("send-button");
+            const fileUploadContainer = document.querySelector(".file-upload-container");
+
+            fileUploadContainer.insertAdjacentHTML("afterend", `
+                <button type="button" class="tool-btn tool-btn--voice" id="voice-record-btn" aria-label="录音输入">
                     <i class="fas fa-microphone"></i>
                 </button>
-            `;
-            fileUploadContainer.insertAdjacentHTML('afterend', voiceButtonHTML);
-            
-            const voiceRecordBtn = document.getElementById('voice-record-btn');
-            
-            // Voice recording functionality
-            voiceRecordBtn.addEventListener('click', toggleRecording);
-            
-            // Initialize audio context
+            `);
+
+            const voiceRecordBtn = document.getElementById("voice-record-btn");
+            voiceRecordBtn.addEventListener("click", toggleRecording);
+
+            renderWelcomeState();
+
             try {
                 window.AudioContext = window.AudioContext || window.webkitAudioContext;
                 audioContext = new AudioContext();
-            } catch (e) {
-                console.error('Web Audio API is not supported in this browser');
-            }
-            
-            // We only maintain display messages
-            let displayMessages = [];
-            
-            // Auto-resize textarea
-            messageInput.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + 'px';
-            });
-            
-            // Handle image upload
-            imageUpload.addEventListener('change', function(e) {
-                if (e.target.files.length > 0) {
-                    const file = e.target.files[0];
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        previewImage.src = e.target.result;
-                        previewContainer.style.display = 'block';
-                    };
-                    
-                    reader.readAsDataURL(file);
-                }
-            });
-            
-            // Remove image preview
-            removeImageBtn.addEventListener('click', function() {
-                imageUpload.value = '';
-                previewContainer.style.display = 'none';
-                previewImage.src = '';
-            });
-            
-            // Clear chat (only visual)
-            clearChatBtn.addEventListener('click', function() {
-                displayMessages = [];
-                chatBody.innerHTML = `
-                    <div class="message assistant-message">
-                        <div class="agent-tag">系统</div>
-                        <p>你好！我是你的医疗智能助手。你可以向我提出健康相关的问题，或上传医学图像进行分析。</p>
-                    </div>
-                `;
-            });
-            
-            // Handle form submission
-            async function handleFormSubmit() {
-                // Get message from input or transcribed text
-                const message = messageInput.value.trim();
-                if (!message && !imageUpload.files.length) return;
-                
-                // Store image data if available
-                let imageDataUrl = null;
-                if (imageUpload.files.length > 0) {
-                    imageDataUrl = previewImage.src;
-                }
-                
-                // Add user message to chat
-                const userMessageElement = document.createElement('div');
-                userMessageElement.className = 'message user-message';
-                
-                // Create message content with image if available
-                let messageContent = `<p>${message}</p>`;
-                if (imageDataUrl) {
-                    messageContent += `
-                        <div class="mt-2">
-                            <img src="${imageDataUrl}" alt="上传的图像" class="img-fluid rounded" style="max-height: 200px;">
-                        </div>
-                    `;
-                }
-                
-                userMessageElement.innerHTML = messageContent;
-                chatBody.appendChild(userMessageElement);
-                
-                // Add thinking indicator
-                const thinkingElement = document.createElement('div');
-                thinkingElement.className = 'message assistant-message thinking';
-                thinkingElement.innerHTML = `
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                `;
-                chatBody.appendChild(thinkingElement);
-                
-                // Scroll to bottom
-                chatBody.scrollTop = chatBody.scrollHeight;
-                
-                // Clear input
-                messageInput.value = '';
-                messageInput.style.height = 'auto';
-                
-                try {
-                    let response;
-                    
-                    // Check if there's an image or just text
-                    if (imageUpload.files.length > 0) {
-                        // Create form data for image upload with optional text
-                        const formData = new FormData();
-                        formData.append('text', message);
-                        formData.append('image', imageUpload.files[0]);
-                        
-                        // Send to backend using the /upload endpoint
-                        response = await fetch(`${API_BASE}/upload`, {
-                            method: 'POST',
-                            body: formData,
-                            credentials: 'include' // Important for cookie handling
-                        });
-                    } else {
-                        // Text-only query using the /chat endpoint with JSON
-                        response = await fetch(`${API_BASE}/chat`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                query: message,
-                                conversation_history: [] // You might want to maintain this if needed
-                            }),
-                            credentials: 'include' // Important for cookie handling
-                        });
-                    }
-                    
-                    const data = await response.json();
-                    
-                    // Remove thinking indicator
-                    chatBody.removeChild(thinkingElement);
-                    
-                    // Add response to chat
-                    const assistantMessageElement = document.createElement('div');
-                    assistantMessageElement.className = 'message assistant-message';
-                    
-                    // Get clean text for TTS (without markdown)
-                    const cleanText = removeMarkdown(data.response);
-                    
-                    // Build HTML content for the response with audio controls
-                    let assistantHtml = `
-                        <div class="agent-tag">${data.agent}</div>
-                        <div>${marked.parse(data.response)}</div>
-                        <div class="audio-controls mt-2">
-                            <button class="btn btn-sm btn-outline-primary play-tts-btn">
-                                <i class="fas fa-play"></i> 播放语音回复
-                            </button>
-                        </div>
-                    `;
-
-                    // Add human validation UI if required
-                    if (data.agent.includes("HUMAN_VALIDATION")) {
-                        assistantHtml += `
-                            <div class="mt-3 p-3 border rounded bg-light">
-                                <p><strong>⚠️ 需要人工验证：</strong> 您是否同意该诊断结果？</p>
-                                <button class="btn btn-success btn-sm validate-btn" data-validation="yes">✔ 同意</button>
-                                <button class="btn btn-danger btn-sm validate-btn" data-validation="no">✖ 不同意</button>
-                                <textarea class="form-control mt-2 validation-comments" rows="2" placeholder="添加备注（可选）"></textarea>
-                            </div>
-                        `;
-                    }
-                    
-                    // Add result image if it exists
-                    if (data.result_image) {
-                        // If the skin lesion segmentation agent was used and both the user uploaded
-                        // an image and we have a result image, display them side by side
-                        if (data.agent === "SKIN_LESION_AGENT, HUMAN_VALIDATION" && imageDataUrl) {
-                            assistantHtml += `
-                                <div class="image-side-by-side">
-                                    <div class="image-container">
-                                        <img src="${imageDataUrl}" alt="原始图像" class="img-fluid rounded">
-                                        <div class="image-caption">原始图像</div>
-                                    </div>
-                                    <div class="image-container">
-                                        <img src="${data.result_image}" alt="分割结果" class="img-fluid rounded">
-                                        <div class="image-caption">分割结果</div>
-                                    </div>
-                                </div>
-                            `;
-                        } else {
-                            // Otherwise just show the result image
-                            assistantHtml += `
-                                <div class="mt-3">
-                                    <img src="${data.result_image}" alt="结果图像" class="result-image">
-                                </div>
-                            `;
-                        }
-                    }
-                    
-                    assistantMessageElement.innerHTML = assistantHtml;
-                    chatBody.appendChild(assistantMessageElement);
-
-                    // Attach validation button events if human validation is required
-                    if (data.agent.includes("HUMAN_VALIDATION")) {
-                        document.querySelectorAll('.validate-btn').forEach(button => {
-                            button.addEventListener('click', async function () {
-                                const validation = this.getAttribute('data-validation');
-                                // Use the closest container to get the textarea value
-                                const comments = this.closest('.p-3').querySelector('.validation-comments').value;
-                                await sendValidation(validation, comments);
-                            });
-                        });
-                    }
-                    
-                    // Get the play button and add click event to speak text
-                    const playButton = assistantMessageElement.querySelector('.play-tts-btn');
-
-                    playButton.addEventListener('click', async function () {
-                        // Get a reasonable amount of text to convert to speech (limit to 1000 chars to keep requests smaller)
-                        const textForSpeech = cleanText.length > 1000 ? cleanText.substring(0, 1000) + "..." : cleanText;
-
-                        // Disable the button while generating speech
-                        this.disabled = true;
-                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...';
-
-                        try {
-                            // Get the new audio URL
-                            const audioUrl = await generateSpeech(textForSpeech);
-
-                            // Stop and clean up previous audio if playing
-                            if (currentAudio) {
-                                currentAudio.pause();
-                                currentAudio.currentTime = 0;
-                                URL.revokeObjectURL(currentAudio.src);  // Free up memory
-                                currentAudio = null;  // Clear the reference
-                            }
-
-                            // Create a new audio element for the new speech
-                            currentAudio = new Audio(audioUrl);
-
-                            // Set event listeners for button updates
-                            currentAudio.onplay = () => {
-                                this.innerHTML = '<i class="fas fa-pause"></i> 暂停';
-                                this.classList.remove('btn-outline-primary');
-                                this.classList.add('btn-primary');
-                                this.disabled = false;
-                            };
-
-                            currentAudio.onpause = () => {
-                                this.innerHTML = '<i class="fas fa-play"></i> 播放';
-                                this.classList.remove('btn-primary');
-                                this.classList.add('btn-outline-primary');
-                            };
-
-                            currentAudio.onended = () => {
-                                this.innerHTML = '<i class="fas fa-play"></i> 重新播放';
-                                this.classList.remove('btn-primary');
-                                this.classList.add('btn-outline-primary');
-                                URL.revokeObjectURL(audioUrl);  // Free memory after playback
-                                currentAudio = null;  // Ensure reference is cleared
-                            };
-
-                            // Toggle play/pause on button click
-                            this.onclick = () => {
-                                if (currentAudio && currentAudio.paused) {
-                                    currentAudio.play();
-                                } else {
-                                    currentAudio.pause();
-                                }
-                            };
-
-                            // Play the generated speech
-                            currentAudio.play();
-                        } catch (error) {
-                            console.error("TTS Error:", error);
-                            this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 语音失败';
-                            this.disabled = false;
-                        }
-                    });
-                    
-                    // Store messages for display purposes only
-                    displayMessages.push({
-                        role: "user",
-                        content: message,
-                        image: imageDataUrl
-                    });
-                    
-                    displayMessages.push({
-                        role: "assistant",
-                        content: data.response,
-                        agent: data.agent,
-                        resultImage: data.result_image
-                    });
-                    
-                    // Clear file upload preview
-                    imageUpload.value = '';
-                    previewContainer.style.display = 'none';
-                    
-                } catch (error) {
-                    console.error("Error:", error);
-                    // Remove thinking indicator
-                    chatBody.removeChild(thinkingElement);
-                    
-                    // Add error message
-                    const errorElement = document.createElement('div');
-                    errorElement.className = 'message assistant-message';
-                    errorElement.innerHTML = `
-                        <div class="agent-tag">系统</div>
-                        <p class="text-danger">抱歉，处理您的请求时出错，请重试。</p>
-                    `;
-                    chatBody.appendChild(errorElement);
-                }
-                
-                // Scroll to bottom again
-                chatBody.scrollTop = chatBody.scrollHeight;
+            } catch (error) {
+                console.error("Web Audio API is not supported in this browser", error);
             }
 
-            chatForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                handleFormSubmit();
+            messageInput.addEventListener("input", function() {
+                this.style.height = "auto";
+                this.style.height = `${this.scrollHeight}px`;
             });
 
-            // Allow sending message with Enter key
-            messageInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
+            imageUpload.addEventListener("change", function(event) {
+                if (!event.target.files.length) {
+                    return;
+                }
+
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                reader.onload = function(loadEvent) {
+                    previewImage.src = loadEvent.target.result;
+                    previewContainer.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            });
+
+            removeImageBtn.addEventListener("click", function() {
+                resetImagePreview();
+            });
+
+            clearChatBtn.addEventListener("click", function() {
+                stopCurrentAudio();
+                renderWelcomeState();
+                messageInput.value = "";
+                messageInput.style.height = "auto";
+                resetImagePreview();
+            });
+
+            chatForm.addEventListener("submit", async function(event) {
+                event.preventDefault();
+                await handleFormSubmit();
+            });
+
+            messageInput.addEventListener("keydown", function(event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
                     handleFormSubmit();
                 }
             });
+
+            async function handleFormSubmit() {
+                const message = messageInput.value.trim();
+                const hasImage = imageUpload.files.length > 0;
+
+                if (!message && !hasImage) {
+                    return;
+                }
+
+                if (chatBody.querySelector(".welcome-card")) {
+                    chatBody.innerHTML = "";
+                }
+
+                const imageDataUrl = hasImage ? previewImage.src : null;
+                const userMessageElement = createUserMessage(message, imageDataUrl);
+                chatBody.appendChild(userMessageElement);
+
+                const thinkingElement = createThinkingElement();
+                chatBody.appendChild(thinkingElement);
+                scrollChatToBottom();
+
+                messageInput.value = "";
+                messageInput.style.height = "auto";
+                setComposerBusy(true);
+
+                try {
+                    let response;
+                    if (hasImage) {
+                        const formData = new FormData();
+                        formData.append("text", message);
+                        formData.append("image", imageUpload.files[0]);
+
+                        response = await fetch(`${API_BASE}/upload`, {
+                            method: "POST",
+                            body: formData,
+                            credentials: "include"
+                        });
+                    } else {
+                        response = await fetch(`${API_BASE}/chat`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                query: message,
+                                conversation_history: []
+                            }),
+                            credentials: "include"
+                        });
+                    }
+
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(data.detail || data.response || "请求失败，请稍后重试。");
+                    }
+
+                    thinkingElement.remove();
+                    const assistantMessageElement = createAssistantMessage(data, imageDataUrl);
+                    chatBody.appendChild(assistantMessageElement);
+                    bindAssistantActions(assistantMessageElement, data);
+                    resetImagePreview();
+                } catch (error) {
+                    console.error("Request failed:", error);
+                    thinkingElement.remove();
+                    chatBody.appendChild(createSystemErrorMessage(error.message || "抱歉，处理您的请求时出错，请重试。"));
+                } finally {
+                    setComposerBusy(false);
+                    scrollChatToBottom();
+                }
+            }
+
+            function renderWelcomeState() {
+                chatBody.innerHTML = WELCOME_HTML;
+                scrollChatToBottom();
+            }
+
+            function resetImagePreview() {
+                imageUpload.value = "";
+                previewImage.src = "";
+                previewContainer.style.display = "none";
+            }
+
+            function setComposerBusy(isBusy) {
+                sendButton.disabled = isBusy;
+                imageUpload.disabled = isBusy;
+                messageInput.disabled = isBusy;
+            }
+
+            function scrollChatToBottom() {
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
         });
 
-        // Speech Recorder button function
-        function toggleRecording() {
-            const voiceButton = document.getElementById('voice-record-btn');
-            
-            if (!isRecording) {
-                // Start recording
-                navigator.mediaDevices.getUserMedia({ audio: true })
-                    .then(stream => {
-                        mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-                        audioChunks = [];
-                        
-                        mediaRecorder.addEventListener('dataavailable', event => {
-                            audioChunks.push(event.data);
-                        });
-                        
-                        mediaRecorder.addEventListener('stop', () => {
-                            const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType });
-                            transcribeSpeech(audioBlob);
-                            
-                            // Reset UI
-                            voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
-                            voiceButton.classList.remove('btn-danger');
-                            voiceButton.classList.add('btn-warning');
-                        });
-                        
-                        // Start recording
-                        mediaRecorder.start();
-                        isRecording = true;
-                        
-                        // Update UI
-                        voiceButton.innerHTML = '<i class="fas fa-stop"></i>';
-                        voiceButton.classList.remove('btn-warning');
-                        voiceButton.classList.add('btn-danger');
-                    })
-                    .catch(error => {
-                        console.error('Error accessing microphone:', error);
-                        alert('无法访问麦克风，请检查浏览器权限设置。');
-                    });
-            } else {
-                // Stop recording
-                mediaRecorder.stop();
-                isRecording = false;
-                
-                // Update UI to show processing
-                voiceButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                voiceButton.disabled = true;
-                
-                // Each track needs to be stopped to turn off the microphone
-                mediaRecorder.stream.getTracks().forEach(track => track.stop());
-            }
+        function escapeHtml(text) {
+            const div = document.createElement("div");
+            div.textContent = text;
+            return div.innerHTML;
         }
 
-        function transcribeSpeech(audioBlob) {
-            const voiceButton = document.getElementById('voice-record-btn');
-            const messageInput = document.getElementById('message-input');
-            
-            // Create a temporary element to display processing status
-            const statusElement = document.createElement('div');
-            statusElement.className = 'alert alert-info mt-2';
-            statusElement.innerHTML = '正在处理语音输入...';
-            document.querySelector('.chat-footer').prepend(statusElement);
-            
-            // Use server-side transcription for recorded audio
-            const formData = new FormData();
-            formData.append('audio', audioBlob);
-            
-            fetch(`${API_BASE}/transcribe`, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.transcript) {
-                    messageInput.value = data.transcript;
-                    messageInput.focus();
+        function formatPlainText(text) {
+            return escapeHtml(text).replace(/\n/g, "<br>");
+        }
+
+        function createUserMessage(message, imageDataUrl) {
+            const element = document.createElement("div");
+            element.className = "message user-message";
+
+            const messageHtml = message
+                ? `<p>${formatPlainText(message)}</p>`
+                : `<p>已上传 1 张待分析图像，请系统直接开始识别。</p>`;
+
+            const imageHtml = imageDataUrl
+                ? `
+                    <div class="mt-3">
+                        <img src="${imageDataUrl}" alt="上传的图像" class="img-fluid">
+                    </div>
+                `
+                : "";
+
+            element.innerHTML = `
+                <div class="message-role">
+                    <span class="message-time">你</span>
+                    <div class="agent-tag">用户输入</div>
+                </div>
+                <div class="message-bubble">
+                    ${messageHtml}
+                    ${imageHtml}
+                </div>
+            `;
+
+            return element;
+        }
+
+        function createThinkingElement() {
+            const element = document.createElement("div");
+            element.className = "message assistant-message thinking";
+            element.innerHTML = `
+                <div class="message-role">
+                    <div class="agent-tag">系统处理中</div>
+                    <span class="message-time">分析中</span>
+                </div>
+                <div class="message-bubble">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            `;
+            return element;
+        }
+
+        function createAssistantMessage(data, imageDataUrl) {
+            const element = document.createElement("div");
+            element.className = "message assistant-message";
+
+            let validationHtml = "";
+            if (data.agent && data.agent.includes("HUMAN_VALIDATION")) {
+                validationHtml = `
+                    <div class="validation-panel">
+                        <p><strong>需要人工验证：</strong>如果你同意当前结果，可以直接确认；如果有疑问，也可以附上备注继续复核。</p>
+                        <div class="validation-actions">
+                            <button type="button" class="btn btn-success action-btn validate-btn" data-validation="yes">
+                                <i class="fas fa-circle-check me-2"></i>同意结果
+                            </button>
+                            <button type="button" class="btn btn-outline-danger action-btn validate-btn" data-validation="no">
+                                <i class="fas fa-circle-xmark me-2"></i>需要复核
+                            </button>
+                        </div>
+                        <textarea class="validation-comments" rows="3" placeholder="补充备注，例如怀疑误判的区域、病史信息或需要复查的原因。"></textarea>
+                    </div>
+                `;
+            }
+
+            let resultImageHtml = "";
+            if (data.result_image) {
+                if (data.agent === "SKIN_LESION_AGENT, HUMAN_VALIDATION" && imageDataUrl) {
+                    resultImageHtml = `
+                        <div class="image-side-by-side">
+                            <div class="image-container">
+                                <img src="${imageDataUrl}" alt="原始图像" class="img-fluid">
+                                <div class="image-caption">原始图像</div>
+                            </div>
+                            <div class="image-container">
+                                <img src="${data.result_image}" alt="分割结果" class="img-fluid">
+                                <div class="image-caption">分割结果</div>
+                            </div>
+                        </div>
+                    `;
                 } else {
-                    throw new Error('Transcription failed');
+                    resultImageHtml = `
+                        <img src="${data.result_image}" alt="结果图像" class="result-image">
+                    `;
                 }
-            })
-            .catch(error => {
-                console.error('Transcription error:', error);
-                statusElement.className = 'alert alert-danger mt-2';
-                statusElement.innerHTML = '语音转写失败，请重试或直接输入文字。';
-            })
-            .finally(() => {
-                // Clean up
-                setTimeout(() => {
-                    statusElement.remove();
-                    voiceButton.disabled = false;
-                    voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
-                }, 3000);
+            }
+
+            element.innerHTML = `
+                <div class="message-role">
+                    <div class="agent-tag">${escapeHtml(data.agent || "系统")}</div>
+                    <span class="message-time">已返回</span>
+                </div>
+                <div class="message-bubble">
+                    <div class="message-markdown">${marked.parse(data.response || "")}</div>
+                    ${resultImageHtml}
+                    <div class="message-actions">
+                        <button type="button" class="btn btn-outline-primary audio-btn play-tts-btn">
+                            <i class="fas fa-play me-2"></i>播放语音回复
+                        </button>
+                    </div>
+                    ${validationHtml}
+                </div>
+            `;
+
+            return element;
+        }
+
+        function createSystemErrorMessage(message) {
+            const element = document.createElement("div");
+            element.className = "message assistant-message";
+            element.innerHTML = `
+                <div class="message-role">
+                    <div class="agent-tag">系统</div>
+                    <span class="message-time">异常</span>
+                </div>
+                <div class="message-bubble">
+                    <p class="text-danger mb-0">${escapeHtml(message)}</p>
+                </div>
+            `;
+            return element;
+        }
+
+        function bindAssistantActions(container, data) {
+            const playButton = container.querySelector(".play-tts-btn");
+            if (playButton) {
+                const cleanText = removeMarkdown(data.response || "");
+                attachTtsHandler(playButton, cleanText);
+            }
+
+            container.querySelectorAll(".validate-btn").forEach((button) => {
+                button.addEventListener("click", async function() {
+                    const validation = this.getAttribute("data-validation");
+                    const comments = this.closest(".validation-panel").querySelector(".validation-comments").value.trim();
+                    await sendValidation(validation, comments);
+                });
             });
         }
 
-        // Function to generate speech using the backend
-        async function generateSpeech(text) {
-            try {
-                const response = await fetch(`${API_BASE}/generate-speech`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        text: text,
-                        voice_id: selectedVoiceId
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+        function attachTtsHandler(button, cleanText) {
+            button.addEventListener("click", async function() {
+                const textForSpeech = cleanText.length > 1000 ? `${cleanText.substring(0, 1000)}...` : cleanText;
+                if (!textForSpeech) {
+                    return;
                 }
 
-                // Convert response to a playable audio blob
-                const audioBlob = await response.blob();
-                return URL.createObjectURL(audioBlob);
-            } catch (error) {
-                console.error("Error generating speech:", error);
-                throw error;
+                if (currentAudio && currentAudioButton === this) {
+                    if (currentAudio.paused) {
+                        currentAudio.play();
+                    } else {
+                        currentAudio.pause();
+                    }
+                    return;
+                }
+
+                updateAudioButton(this, "loading");
+
+                try {
+                    stopCurrentAudio();
+                    const audioUrl = await generateSpeech(textForSpeech);
+                    currentAudioUrl = audioUrl;
+                    currentAudio = new Audio(audioUrl);
+                    currentAudioButton = this;
+
+                    currentAudio.onplay = () => updateAudioButton(this, "playing");
+                    currentAudio.onpause = () => {
+                        if (currentAudioButton === this) {
+                            updateAudioButton(this, "paused");
+                        }
+                    };
+                    currentAudio.onended = () => {
+                        if (currentAudioUrl) {
+                            URL.revokeObjectURL(currentAudioUrl);
+                        }
+                        updateAudioButton(this, "ended");
+                        currentAudio = null;
+                        currentAudioUrl = null;
+                        currentAudioButton = null;
+                    };
+
+                    await currentAudio.play();
+                } catch (error) {
+                    console.error("TTS Error:", error);
+                    updateAudioButton(this, "error");
+                }
+            });
+        }
+
+        function updateAudioButton(button, state) {
+            button.disabled = false;
+            button.classList.remove("btn-outline-primary", "btn-primary", "btn-outline-danger");
+
+            if (state === "loading") {
+                button.disabled = true;
+                button.classList.add("btn-outline-primary");
+                button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>生成中...';
+                return;
+            }
+
+            if (state === "playing") {
+                button.classList.add("btn-primary");
+                button.innerHTML = '<i class="fas fa-pause me-2"></i>暂停';
+                return;
+            }
+
+            if (state === "paused") {
+                button.classList.add("btn-outline-primary");
+                button.innerHTML = '<i class="fas fa-play me-2"></i>继续播放';
+                return;
+            }
+
+            if (state === "ended") {
+                button.classList.add("btn-outline-primary");
+                button.innerHTML = '<i class="fas fa-rotate-right me-2"></i>重新播放';
+                return;
+            }
+
+            if (state === "error") {
+                button.classList.add("btn-outline-danger");
+                button.innerHTML = '<i class="fas fa-triangle-exclamation me-2"></i>语音失败';
+                return;
+            }
+
+            button.classList.add("btn-outline-primary");
+            button.innerHTML = '<i class="fas fa-play me-2"></i>播放语音回复';
+        }
+
+        function stopCurrentAudio() {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+
+            if (currentAudioUrl) {
+                URL.revokeObjectURL(currentAudioUrl);
+            }
+
+            if (currentAudioButton) {
+                updateAudioButton(currentAudioButton, "default");
+            }
+
+            currentAudio = null;
+            currentAudioUrl = null;
+            currentAudioButton = null;
+        }
+
+        function toggleRecording() {
+            const voiceButton = document.getElementById("voice-record-btn");
+
+            if (!isRecording) {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then((stream) => {
+                        mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+                        audioChunks = [];
+
+                        mediaRecorder.addEventListener("dataavailable", (event) => {
+                            audioChunks.push(event.data);
+                        });
+
+                        mediaRecorder.addEventListener("stop", () => {
+                            const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType });
+                            transcribeSpeech(audioBlob);
+                            voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                            voiceButton.classList.remove("recording");
+                        });
+
+                        mediaRecorder.start();
+                        isRecording = true;
+                        voiceButton.innerHTML = '<i class="fas fa-stop"></i>';
+                        voiceButton.classList.add("recording");
+                    })
+                    .catch((error) => {
+                        console.error("Error accessing microphone:", error);
+                        alert("无法访问麦克风，请检查浏览器权限设置。");
+                    });
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                voiceButton.disabled = true;
+                voiceButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                mediaRecorder.stream.getTracks().forEach((track) => track.stop());
             }
         }
 
-        // Function to send human validated response
-        async function sendValidation(validation, comments) {
-            try {
-                // Create and display a waiting element
-                const waitingEl = document.createElement('div');
-                waitingEl.className = 'alert alert-info mt-2';
-                waitingEl.innerHTML = '⏳ 正在处理验证...';
-                document.getElementById("chat-body").appendChild(waitingEl);
+        function showInlineStatus(type, text) {
+            const composer = document.querySelector(".composer");
+            let statusElement = composer.querySelector(".inline-status");
 
+            if (!statusElement) {
+                statusElement = document.createElement("div");
+                statusElement.className = "inline-status";
+                composer.appendChild(statusElement);
+            }
+
+            statusElement.className = `inline-status ${type}`;
+            statusElement.textContent = text;
+
+            return statusElement;
+        }
+
+        function transcribeSpeech(audioBlob) {
+            const voiceButton = document.getElementById("voice-record-btn");
+            const messageInput = document.getElementById("message-input");
+            const statusElement = showInlineStatus("info", "正在处理语音输入...");
+
+            const formData = new FormData();
+            formData.append("audio", audioBlob);
+
+            fetch(`${API_BASE}/transcribe`, {
+                method: "POST",
+                body: formData
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.transcript) {
+                        messageInput.value = data.transcript;
+                        messageInput.focus();
+                        messageInput.style.height = "auto";
+                        messageInput.style.height = `${messageInput.scrollHeight}px`;
+                        statusElement.className = "inline-status info";
+                        statusElement.textContent = "语音已转写，可以继续编辑后发送。";
+                    } else {
+                        throw new Error("Transcription failed");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Transcription error:", error);
+                    statusElement.className = "inline-status error";
+                    statusElement.textContent = "语音转写失败，请重试或直接输入文字。";
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        const currentStatus = document.querySelector(".inline-status");
+                        if (currentStatus) {
+                            currentStatus.remove();
+                        }
+                        voiceButton.disabled = false;
+                        voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                        voiceButton.classList.remove("recording");
+                    }, 2600);
+                });
+        }
+
+        async function generateSpeech(text) {
+            const response = await fetch(`${API_BASE}/generate-speech`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    text: text,
+                    voice_id: selectedVoiceId
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const audioBlob = await response.blob();
+            return URL.createObjectURL(audioBlob);
+        }
+
+        async function sendValidation(validation, comments) {
+            const chatBody = document.getElementById("chat-body");
+            const waitingEl = document.createElement("div");
+            waitingEl.className = "message assistant-message";
+            waitingEl.innerHTML = `
+                <div class="message-role">
+                    <div class="agent-tag">系统处理中</div>
+                    <span class="message-time">复核中</span>
+                </div>
+                <div class="message-bubble">
+                    <p class="mb-0">正在提交人工验证结果，请稍候...</p>
+                </div>
+            `;
+            chatBody.appendChild(waitingEl);
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            try {
                 const formData = new FormData();
                 formData.append("validation_result", validation);
                 formData.append("comments", comments);
@@ -1442,138 +1752,67 @@
                 const response = await fetch(`${API_BASE}/validate`, {
                     method: "POST",
                     body: formData,
-                    credentials: 'include'
+                    credentials: "include"
                 });
 
                 const result = await response.json();
-
-                // Remove waiting indicator
                 waitingEl.remove();
 
-                // Build validated message HTML with audio controls added
+                if (!response.ok) {
+                    throw new Error(result.detail || result.response || "验证提交失败");
+                }
+
                 const validationMsg = document.createElement("div");
                 validationMsg.className = "message assistant-message";
                 validationMsg.innerHTML = `
-                    <div class="agent-tag">HUMAN_VALIDATED</div>
-                    <div>${marked.parse(result.message)}</div>
-                    <div>${marked.parse(result.response)}</div>
-                    <div class="audio-controls mt-2">
-                        <button class="btn btn-sm btn-outline-primary play-tts-btn">
-                            <i class="fas fa-play"></i> 播放语音回复
-                        </button>
+                    <div class="message-role">
+                        <div class="agent-tag">HUMAN_VALIDATED</div>
+                        <span class="message-time">${validation === "yes" ? "已确认" : "需复查"}</span>
+                    </div>
+                    <div class="message-bubble">
+                        <div>${marked.parse(result.message || "")}</div>
+                        <div class="mt-3">${marked.parse(result.response || "")}</div>
+                        <div class="message-actions">
+                            <button type="button" class="btn btn-outline-primary audio-btn play-tts-btn">
+                                <i class="fas fa-play me-2"></i>播放语音回复
+                            </button>
+                        </div>
                     </div>
                 `;
-                document.getElementById("chat-body").appendChild(validationMsg);
 
-                // Get clean text for TTS (without markdown)
-                const cleanText = removeMarkdown(result.response);
-
-                // Attach event listener for TTS for validation message
-                const playButton = validationMsg.querySelector('.play-tts-btn');
+                chatBody.appendChild(validationMsg);
+                const playButton = validationMsg.querySelector(".play-tts-btn");
                 if (playButton) {
-                    playButton.addEventListener('click', async function () {
-                        // Get a reasonable amount of text to convert to speech (limit to 1000 chars to keep requests smaller)
-                        const textForSpeech = cleanText.length > 1000 ? cleanText.substring(0, 1000) + "..." : cleanText;
-
-                        // Disable the button while generating speech
-                        this.disabled = true;
-                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...';
-
-                        try {
-                            // Get the new audio URL
-                            const audioUrl = await generateSpeech(textForSpeech);
-
-                            // Stop and clean up previous audio if playing
-                            if (currentAudio) {
-                                currentAudio.pause();
-                                currentAudio.currentTime = 0;
-                                URL.revokeObjectURL(currentAudio.src);  // Free up memory
-                                currentAudio = null;  // Clear the reference
-                            }
-
-                            // Create a new audio element for the new speech
-                            currentAudio = new Audio(audioUrl);
-
-                            // Set event listeners for button updates
-                            currentAudio.onplay = () => {
-                                this.innerHTML = '<i class="fas fa-pause"></i> 暂停';
-                                this.classList.remove('btn-outline-primary');
-                                this.classList.add('btn-primary');
-                                this.disabled = false;
-                            };
-
-                            currentAudio.onpause = () => {
-                                this.innerHTML = '<i class="fas fa-play"></i> 播放';
-                                this.classList.remove('btn-primary');
-                                this.classList.add('btn-outline-primary');
-                            };
-
-                            currentAudio.onended = () => {
-                                this.innerHTML = '<i class="fas fa-play"></i> 重新播放';
-                                this.classList.remove('btn-primary');
-                                this.classList.add('btn-outline-primary');
-                                URL.revokeObjectURL(audioUrl);  // Free memory after playback
-                                currentAudio = null;  // Ensure reference is cleared
-                            };
-
-                            // Toggle play/pause on button click
-                            this.onclick = () => {
-                                if (currentAudio && currentAudio.paused) {
-                                    currentAudio.play();
-                                } else {
-                                    currentAudio.pause();
-                                }
-                            };
-
-                            // Play the generated speech
-                            currentAudio.play();
-                        } catch (error) {
-                            console.error("TTS Error:", error);
-                            this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 语音失败';
-                            this.disabled = false;
-                        }
-                    });
+                    attachTtsHandler(playButton, removeMarkdown(result.response || ""));
                 }
             } catch (error) {
                 console.error("Validation submission failed:", error);
+                waitingEl.remove();
+                chatBody.appendChild(createSystemErrorMessage(error.message || "验证提交失败，请重试。"));
             }
+
+            chatBody.scrollTop = chatBody.scrollHeight;
         }
 
-        // Helper function to remove markdown for clean TTS
         function removeMarkdown(text) {
-            if (!text) return '';
-            
-            // Remove code blocks
-            text = text.replace(/```[\s\S]*?```/g, '代码块已省略。');
-            
-            // Remove inline code
-            text = text.replace(/`([^`]+)`/g, '$1');
-            
-            // Remove headers
-            text = text.replace(/#{1,6}\s+/g, '');
-            
-            // Remove bold/italic markers
-            text = text.replace(/(\*\*|__)(.*?)\1/g, '$2');
-            text = text.replace(/(\*|_)(.*?)\1/g, '$2');
-            
-            // Remove list markers
-            text = text.replace(/^\s*[\*\-+]\s+/gm, '');
-            text = text.replace(/^\s*\d+\.\s+/gm, '');
-            
-            // Remove links, keep text
-            text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
-            
-            // Remove images
-            text = text.replace(/!\[([^\]]+)\]\([^)]+\)/g, 'Image: $1');
-            
-            // Remove blockquotes
-            text = text.replace(/^\>\s+/gm, '');
-            
-            // Handle line breaks sensibly for speech
-            text = text.replace(/\n{2,}/g, '. ');
-            text = text.replace(/\n/g, ' ');
-            
-            return text;
+            if (!text) {
+                return "";
+            }
+
+            text = text.replace(/```[\s\S]*?```/g, "代码块已省略。");
+            text = text.replace(/`([^`]+)`/g, "$1");
+            text = text.replace(/#{1,6}\s+/g, "");
+            text = text.replace(/(\*\*|__)(.*?)\1/g, "$2");
+            text = text.replace(/(\*|_)(.*?)\1/g, "$2");
+            text = text.replace(/^\s*[\*\-+]\s+/gm, "");
+            text = text.replace(/^\s*\d+\.\s+/gm, "");
+            text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+            text = text.replace(/!\[([^\]]+)\]\([^)]+\)/g, "图像：$1");
+            text = text.replace(/^\>\s+/gm, "");
+            text = text.replace(/\n{2,}/g, "。");
+            text = text.replace(/\n/g, " ");
+
+            return text.trim();
         }
     </script>
 </body>
